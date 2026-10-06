@@ -45,7 +45,6 @@ import {
 
 import "./styles.css";
 
-
 /* =========================================================
    CAUSES DATA
 ========================================================= */
@@ -72,15 +71,8 @@ const causes = [
     300000,
     180000,
   ],
-  [
-    "Animal Welfare",
-    "For a Kinder World",
-    "PawPrint",
-    250000,
-    140000,
-  ],
+  ["Animal Welfare", "For a Kinder World", "PawPrint", 250000, 140000],
 ];
-
 
 /* =========================================================
    SAMPLE DONATIONS
@@ -139,25 +131,19 @@ const seed = [
   },
 ];
 
-
 /* =========================================================
    LOCAL STORAGE HELPERS
 ========================================================= */
 
 const getD = () => {
   try {
-    const stored = JSON.parse(
-      localStorage.getItem("tripti_donations")
-    );
+    const stored = JSON.parse(localStorage.getItem("tripti_donations"));
 
     if (Array.isArray(stored) && stored.length > 0) {
       return stored;
     }
 
-    localStorage.setItem(
-      "tripti_donations",
-      JSON.stringify(seed)
-    );
+    localStorage.setItem("tripti_donations", JSON.stringify(seed));
 
     return seed;
   } catch {
@@ -165,46 +151,31 @@ const getD = () => {
   }
 };
 
-
 const saveD = (data) => {
-  localStorage.setItem(
-    "tripti_donations",
-    JSON.stringify(data)
-  );
+  localStorage.setItem("tripti_donations", JSON.stringify(data));
 
-  window.dispatchEvent(
-    new Event("tripti-update")
-  );
+  window.dispatchEvent(new Event("tripti-update"));
 };
-
 
 const getUser = () => {
   try {
-    return JSON.parse(
-      localStorage.getItem("tripti_user")
-    );
+    return JSON.parse(localStorage.getItem("tripti_user"));
   } catch {
     return null;
   }
 };
 
-
 const money = (number) => {
   return `₹${Number(number || 0).toLocaleString("en-IN")}`;
 };
 
-
 const today = () => {
-  return new Date().toLocaleDateString(
-    "en-IN",
-    {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }
-  );
+  return new Date().toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 };
-
 
 /* =========================================================
    LOGO
@@ -212,22 +183,15 @@ const today = () => {
 
 function Logo() {
   return (
-    <Link
-      to="/"
-      className="logoLink"
-    >
+    <Link to="/" className="logoLink">
       <div className="logo">
         <div className="logoImageWrap">
-          <img
-            src="/tripti-logo.jpg"
-            alt="Tripti Foundation"
-          />
+          <img src="/tripti-logo.jpg" alt="Tripti Foundation" />
         </div>
       </div>
     </Link>
   );
 }
-
 
 /* =========================================================
    PUBLIC NAVBAR
@@ -244,29 +208,19 @@ function PublicNav() {
       setUser(getUser());
     };
 
-    window.addEventListener(
-      "tripti-user-update",
-      updateUser
-    );
+    window.addEventListener("tripti-user-update", updateUser);
 
     return () => {
-      window.removeEventListener(
-        "tripti-user-update",
-        updateUser
-      );
+      window.removeEventListener("tripti-user-update", updateUser);
     };
   }, []);
-
 
   const closeMenu = () => {
     setOpen(false);
   };
 
-
   const logout = () => {
-    localStorage.removeItem(
-      "tripti_user"
-    );
+    localStorage.removeItem("tripti_user");
 
     setUser(null);
 
@@ -275,693 +229,369 @@ function PublicNav() {
     navigate("/");
   };
 
-
   return (
     <header className="publicNav">
-
       <div className="navInner">
-
         <Logo />
 
-        <button
-          className="mobileMenu"
-          onClick={() =>
-            setOpen(!open)
-          }
-        >
-          {open ? (
-            <X size={25} />
-          ) : (
-            <Menu size={25} />
-          )}
+        <button className="mobileMenu" onClick={() => setOpen(!open)}>
+          {open ? <X size={25} /> : <Menu size={25} />}
         </button>
 
-
-        <nav
-          className={`navLinks ${
-            open ? "open" : ""
-          }`}
-        >
-
-          <Link
-            to="/"
-            onClick={closeMenu}
-          >
+        <nav className={`navLinks ${open ? "open" : ""}`}>
+          <Link to="/" onClick={closeMenu}>
             Home
           </Link>
 
-          <Link
-            to="/causes"
-            onClick={closeMenu}
-          >
+          <Link to="/causes" onClick={closeMenu}>
             Causes
           </Link>
 
-          <Link
-            to="/dashboard"
-            onClick={closeMenu}
-          >
+          <Link to="/dashboard" onClick={closeMenu}>
             Live Dashboard
           </Link>
 
-          <Link
-            to="/add-donation"
-            onClick={closeMenu}
-          >
+          <Link to="/add-donation" onClick={closeMenu}>
             Donate
           </Link>
 
           {user ? (
             <>
-              <Link
-                to="/profile"
-                onClick={closeMenu}
-              >
+              <Link to="/profile" onClick={closeMenu}>
                 Profile
               </Link>
 
-              <button
-                className="navLogout"
-                onClick={logout}
-              >
+              <button className="navLogout" onClick={logout}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                onClick={closeMenu}
-              >
+              <Link to="/login" onClick={closeMenu}>
                 Login
               </Link>
 
-              <Link
-                className="signupBtn"
-                to="/signup"
-                onClick={closeMenu}
-              >
+              <Link className="signupBtn" to="/signup" onClick={closeMenu}>
                 Sign Up
               </Link>
             </>
           )}
-
         </nav>
-
       </div>
-
     </header>
   );
 }
-
 
 /* =========================================================
    SIDEBAR
 ========================================================= */
 
-function Sidebar({
-  open,
-  onClose,
-}) {
+function Sidebar({ open, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
 
   const links = [
-    [
-      "/dashboard",
-      "Dashboard",
-      HomeIcon,
-    ],
-    [
-      "/my-donations",
-      "My Donations",
-      WalletCards,
-    ],
-    [
-      "/causes",
-      "Causes",
-      Heart,
-    ],
-    [
-      "/add-donation",
-      "Add Donation",
-      PlusCircle,
-    ],
-    [
-      "/impact",
-      "Impact",
-      BarChart3,
-    ],
-    [
-      "/profile",
-      "Profile",
-      User,
-    ],
+    ["/dashboard", "Dashboard", HomeIcon],
+    ["/beneficiaries", "Beneficiaries", Users],
+    ["/assistance", "Assistance", HeartPulse],
+    ["/pending-support", "Pending Support", Sparkles],
+    ["/profile", "Profile", User],
   ];
 
-
   const logout = () => {
-    localStorage.removeItem(
-      "tripti_user"
-    );
+    localStorage.removeItem("tripti_user");
 
     navigate("/");
 
     onClose();
   };
 
-
   return (
     <>
-      <div
-        className={`sideOverlay ${
-          open ? "show" : ""
-        }`}
-        onClick={onClose}
-      />
+      <div className={`sideOverlay ${open ? "show" : ""}`} onClick={onClose} />
 
-
-      <aside
-        className={`sidebar ${
-          open ? "open" : ""
-        }`}
-      >
-
+      <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="sidebarLogo">
           <Logo />
         </div>
 
-
         <nav className="sideNav">
+          {links.map(([to, label, Icon]) => (
+            <Link
+              key={to}
+              to={to}
+              onClick={onClose}
+              className={location.pathname === to ? "active" : ""}
+            >
+              <Icon size={18} />
 
-          {links.map(
-            ([to, label, Icon]) => (
-              <Link
-                key={to}
-                to={to}
-                onClick={onClose}
-                className={
-                  location.pathname === to
-                    ? "active"
-                    : ""
-                }
-              >
-                <Icon size={18} />
-
-                <span>
-                  {label}
-                </span>
-              </Link>
-            )
-          )}
-
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
 
-
-        <button
-          className="sidebarLogout"
-          onClick={logout}
-        >
+        <button className="sidebarLogout" onClick={logout}>
           <LogOut size={18} />
 
-          <span>
-            Logout
-          </span>
+          <span>Logout</span>
         </button>
-
       </aside>
     </>
   );
 }
-
 
 /* =========================================================
    APP LAYOUT
 ========================================================= */
 
 function Layout({ children }) {
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="dashboardApp">
-
-      <Sidebar
-        open={open}
-        onClose={() =>
-          setOpen(false)
-        }
-      />
+      <Sidebar open={open} onClose={() => setOpen(false)} />
 
       <main className="dashboardMain">
-
-        <button
-          className="sideBtn"
-          onClick={() =>
-            setOpen(true)
-          }
-        >
+        <button className="sideBtn" onClick={() => setOpen(true)}>
           <Menu size={22} />
         </button>
 
         {children}
-
       </main>
-
     </div>
   );
 }
-
 
 /* =========================================================
    LIVE DONATION FEED
 ========================================================= */
 
-function Feed({
-  donations,
-  compact = false,
-}) {
-  const list = donations.slice(
-    0,
-    compact ? 5 : 12
-  );
-
+function Feed({ donations, compact = false }) {
+  const list = donations.slice(0, compact ? 5 : 12);
 
   return (
     <section className="feed">
-
       <div className="feedHead">
-
         <div>
-          <h3>
-            Live Donation Activity
-          </h3>
+          <h3>Live Donation Activity</h3>
 
-          <p>
-            Every contribution creates
-            a little more impact.
-          </p>
+          <p>Every contribution creates a little more impact.</p>
         </div>
 
         <span className="liveBadge">
           <i />
           LIVE
         </span>
-
       </div>
 
-
       {list.length === 0 ? (
-        <div className="emptyState">
-          No donations yet.
-        </div>
+        <div className="emptyState">No donations yet.</div>
       ) : (
         list.map((d) => (
-
-          <div
-            className="feedRow"
-            key={d.id}
-          >
-
+          <div className="feedRow" key={d.id}>
             <span className="feedAvatar">
-              {d.anonymous
-                ? "♡"
-                : d.donor?.charAt(0)
-                  ?.toUpperCase() || "D"}
+              {d.anonymous ? "♡" : d.donor?.charAt(0)?.toUpperCase() || "D"}
             </span>
 
-
             <div className="feedInfo">
+              <b>{d.anonymous ? "Anonymous Donor" : d.donor}</b>
 
-              <b>
-                {d.anonymous
-                  ? "Anonymous Donor"
-                  : d.donor}
-              </b>
-
-              <small>
-                donated to {d.cause}
-              </small>
-
+              <small>donated to {d.cause}</small>
             </div>
-
 
             <div className="feedAmount">
+              <b>{money(d.amount)}</b>
 
-              <b>
-                {money(d.amount)}
-              </b>
-
-              <small>
-                {d.date}
-              </small>
-
+              <small>{d.date}</small>
             </div>
-
           </div>
-
         ))
       )}
-
     </section>
   );
 }
-
 
 /* =========================================================
    HOME PAGE
 ========================================================= */
 
 function Home() {
-  const [ds, setDs] =
-    useState(getD());
-
+  const [ds, setDs] = useState(getD());
 
   useEffect(() => {
-
     const update = () => {
       setDs(getD());
     };
 
+    window.addEventListener("tripti-update", update);
 
-    window.addEventListener(
-      "tripti-update",
-      update
-    );
-
-    window.addEventListener(
-      "storage",
-      update
-    );
-
+    window.addEventListener("storage", update);
 
     return () => {
+      window.removeEventListener("tripti-update", update);
 
-      window.removeEventListener(
-        "tripti-update",
-        update
-      );
-
-      window.removeEventListener(
-        "storage",
-        update
-      );
-
+      window.removeEventListener("storage", update);
     };
-
   }, []);
 
-
-  const total = ds.reduce(
-    (a, d) =>
-      a + Number(d.amount),
-    0
-  );
-
+  const total = ds.reduce((a, d) => a + Number(d.amount), 0);
 
   return (
     <>
       <PublicNav />
 
-
       {/* ================= HERO ================= */}
 
       <section className="hero">
-
         <div className="heroCopy">
-
-          <span className="eyebrow">
-            An Education Trust
-          </span>
-
+          <span className="eyebrow">An Education Trust</span>
 
           <h1>
             Small Donations,
             <br />
-            <span>
-              Big Impact.
-            </span>
+            <span>Big Impact.</span>
           </h1>
 
-
           <p>
-            Tripti Foundation helps you
-            make a difference by supporting
-            education, healthcare,
-            environment and meaningful
-            community initiatives.
+            Tripti Foundation helps you make a difference by supporting
+            education, healthcare, environment and meaningful community
+            initiatives.
           </p>
 
-
           <div className="actions">
-
-            <Link
-              className="btn primary"
-              to="/add-donation"
-            >
+            <Link className="btn primary" to="/add-donation">
               Start Donating
               <ArrowRight size={17} />
             </Link>
 
-
-            <Link
-              className="btn outline"
-              to="/causes"
-            >
+            <Link className="btn outline" to="/causes">
               Explore Causes
             </Link>
-
           </div>
 
-
           <div className="heroStats">
-
             <div className="heroStatItem">
-
               <Users />
 
               <div>
-                <b>
-                  1,250+
-                </b>
+                <b>1,250+</b>
 
-                <small>
-                  Donors
-                </small>
+                <small>Donors</small>
               </div>
-
             </div>
 
-
             <div className="heroStatItem">
-
               <Heart />
 
               <div>
-                <b>
-                  50+
-                </b>
+                <b>50+</b>
 
-                <small>
-                  Causes Supported
-                </small>
+                <small>Causes Supported</small>
               </div>
-
             </div>
 
-
             <div className="heroStatItem">
-
               <WalletCards />
 
               <div>
-                <b>
-                  {money(total)}+
-                </b>
+                <b>{money(total)}+</b>
 
-                <small>
-                  Total Donations
-                </small>
+                <small>Total Donations</small>
               </div>
-
             </div>
-
           </div>
-
         </div>
-
 
         {/* RIGHT SIDE LOGO */}
 
         <div className="heroLogoArea">
-
           <div className="foundationLogoBox">
-
             <img
               src="/tripti-logo.jpg"
               alt="Tripti Foundation"
               className="foundationLogo"
             />
-
           </div>
-
 
           <div className="heroLogoText">
-
             <h3>
               Together, we can create
-              <br />
-              a better tomorrow.
+              <br />a better tomorrow.
             </h3>
 
-            <p>
-              Education • Empowerment •
-              Service
-            </p>
-
+            <p>Education • Empowerment • Service</p>
           </div>
-
         </div>
-
       </section>
-
 
       {/* ================= CAUSES ================= */}
 
       <section className="section">
-
         <div className="sectionHead">
-
           <div>
+            <span className="eyebrow">Make a Difference</span>
 
-            <span className="eyebrow">
-              Make a Difference
-            </span>
-
-            <h2>
-              Causes that need your support
-            </h2>
-
+            <h2>Causes that need your support</h2>
           </div>
-
 
           <Link to="/causes">
             View all
             <ArrowRight size={15} />
           </Link>
-
         </div>
-
 
         <div className="causeGrid">
-
           {causes.map((c) => (
-            <CauseCard
-              key={c[0]}
-              c={c}
-            />
+            <CauseCard key={c[0]} c={c} />
           ))}
-
         </div>
-
       </section>
-
 
       {/* ================= LIVE ACTIVITY ================= */}
 
       <section className="section">
-
-        <Feed
-          donations={ds}
-          compact
-        />
-
+        <Feed donations={ds} compact />
       </section>
-
     </>
   );
 }
-
 
 /* =========================================================
    ICON FOR CAUSE
 ========================================================= */
 
 function iconFor(name) {
-
-  if (
-    name ===
-    "Healthcare Support"
-  ) {
+  if (name === "Healthcare Support") {
     return <HeartPulse />;
   }
 
-
-  if (
-    name ===
-    "Animal Welfare"
-  ) {
+  if (name === "Animal Welfare") {
     return <PawPrint />;
   }
 
-
-  if (
-    name ===
-    "Tree Plantation"
-  ) {
+  if (name === "Tree Plantation") {
     return <TreePine />;
   }
 
-
   return <BookOpen />;
 }
-
 
 /* =========================================================
    CAUSE CARD
 ========================================================= */
 
-function CauseCard({
-  c,
-  large = false,
-}) {
-
-  const percentage = Math.min(
-    100,
-    Math.round(
-      (c[4] / c[3]) * 100
-    )
-  );
-
+function CauseCard({ c, large = false }) {
+  const percentage = Math.min(100, Math.round((c[4] / c[3]) * 100));
 
   return (
-    <article
-      className={`causeCard ${
-        large ? "large" : ""
-      }`}
-    >
+    <article className={`causeCard ${large ? "large" : ""}`}>
+      <div className="causeIcon">{iconFor(c[0])}</div>
 
-      <div className="causeIcon">
-        {iconFor(c[0])}
-      </div>
+      <small>Tripti Foundation</small>
 
+      <h3>{c[0]}</h3>
 
-      <small>
-        Tripti Foundation
-      </small>
-
-
-      <h3>
-        {c[0]}
-      </h3>
-
-
-      <p>
-        {c[1]}. Support meaningful
-        work and help create a
-        brighter future.
-      </p>
-
+      <p>{c[1]}. Support meaningful work and help create a brighter future.</p>
 
       <div className="progress">
         <i
@@ -971,371 +601,205 @@ function CauseCard({
         />
       </div>
 
-
       <div className="causeMeta">
+        <b>{money(c[4])}</b>
 
-        <b>
-          {money(c[4])}
-        </b>
-
-        <span>
-          Goal {money(c[3])}
-        </span>
-
+        <span>Goal {money(c[3])}</span>
       </div>
 
-
       {large && (
-        <Link
-          className="btn outline"
-          to="/add-donation"
-        >
+        <Link className="btn outline" to="/add-donation">
           Support this cause
           <ArrowRight size={15} />
         </Link>
       )}
-
     </article>
   );
 }
-
 
 /* =========================================================
    DASHBOARD
 ========================================================= */
 
 function Dashboard() {
-
-  const [ds, setDs] =
-    useState(getD());
-
-
-  useEffect(() => {
-
-    const update = () =>
-      setDs(getD());
-
-
-    window.addEventListener(
-      "tripti-update",
-      update
-    );
-
-    window.addEventListener(
-      "storage",
-      update
-    );
-
-
-    return () => {
-
-      window.removeEventListener(
-        "tripti-update",
-        update
-      );
-
-      window.removeEventListener(
-        "storage",
-        update
-      );
-
-    };
-
-  }, []);
-
-
-  const total = ds.reduce(
-    (a, d) =>
-      a + Number(d.amount),
-    0
-  );
-
-
-  const supported = new Set(
-    ds.map((x) => x.cause)
-  ).size;
-
-
   return (
     <Layout>
-
+      {/* DASHBOARD HEADER */}
       <div className="dashboardTop">
-
         <div>
+          <h1>Community Service Dashboard 👋</h1>
 
-          <h1>
-            Hello, Khushi! 👋
-          </h1>
-
-          <p>
-            Here's your donation journey
-            at a glance.
-          </p>
-
+          <p>Beneficiary and assistance records at a glance.</p>
         </div>
-
 
         <div className="topUser">
-
           <Bell size={22} />
 
-          <span className="userCircle">
-            K
-          </span>
+          <span className="userCircle">A</span>
 
-          <span>
-            Khushi Singh
-          </span>
+          <span>Admin</span>
 
           <ChevronDown size={15} />
-
         </div>
-
       </div>
 
-
-      {/* STATS */}
-
+      {/* STAT CARDS */}
       <div className="stats">
-
         {[
-          [
-            "Total Donations",
-            money(total),
-            "Your total contribution",
-            WalletCards,
-          ],
+          ["Total Beneficiaries", "0", "Registered beneficiaries", Users],
 
-          [
-            "Donations Made",
-            ds.length,
-            "Total recorded donations",
-            Sparkles,
-          ],
+          ["Assistance Provided", "0", "Total assistance records", HeartPulse],
 
-          [
-            "Causes Supported",
-            supported,
-            "Different causes",
-            Heart,
-          ],
+          ["Pending Support", "0", "Support requirements pending", Sparkles],
 
-          [
-            "Impact Score",
-            "100%",
-            "Keep going!",
-            Leaf,
-          ],
+          ["Active Records", "0", "Records currently managed", ShieldCheck],
+        ].map(([title, value, text, Icon], i) => (
+          <div className="stat" key={title}>
+            <span className={`statIcon stat${i}`}>
+              <Icon />
+            </span>
 
-        ].map(
-          ([title, value, text, Icon], i) => (
+            <small>{title}</small>
 
-            <div
-              className="stat"
-              key={title}
-            >
+            <strong>{value}</strong>
 
-              <span
-                className={`statIcon stat${i}`}
-              >
-                <Icon />
-              </span>
-
-
-              <small>
-                {title}
-              </small>
-
-
-              <strong>
-                {value}
-              </strong>
-
-
-              <em>
-                {text}
-              </em>
-
-            </div>
-
-          )
-        )}
-
+            <em>{text}</em>
+          </div>
+        ))}
       </div>
 
-
-      {/* CHARTS */}
-
+      {/* ASSISTANCE OVERVIEW */}
       <div className="dashGrid">
-
         <div className="chart">
-
-          <h3>
-            Donation Overview
-          </h3>
-
+          <h3>Assistance Overview</h3>
 
           <div className="bars">
-
             {[
-              55,
-              72,
-              82,
-              105,
-              88,
-              115,
-              130,
-            ].map(
-              (height, index) => (
+              {
+                label: "Education",
+                value: 0,
+              },
 
-                <div key={index}>
+              {
+                label: "Food",
+                value: 0,
+              },
 
-                  <i
-                    style={{
-                      height,
-                    }}
-                  />
+              {
+                label: "Medical",
+                value: 0,
+              },
 
-                  <small>
-                    {
-                      [
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                      ][index]
-                    }
-                  </small>
+              {
+                label: "Learning",
+                value: 0,
+              },
 
-                </div>
+              {
+                label: "Essential",
+                value: 0,
+              },
+            ].map((item, index) => (
+              <div key={index}>
+                <i
+                  style={{
+                    height: `${item.value + 20}px`,
+                  }}
+                />
 
-              )
-            )}
-
+                <small>{item.label}</small>
+              </div>
+            ))}
           </div>
-
         </div>
 
-
+        {/* ASSISTANCE TYPES */}
         <div className="chart">
-
-          <h3>
-            Donations by Cause
-          </h3>
-
+          <h3>Assistance by Type</h3>
 
           <div className="donutWrap">
-
             <div className="donut">
-
               <span>
-                {supported}
-
-                <small>
-                  Causes
-                </small>
+                0<small>Assistance</small>
               </span>
-
             </div>
-
 
             <div className="legend">
-
               <span>
-                ● Education
-                <b>35%</b>
+                ● Educational Assistance
+                <b>0</b>
               </span>
 
               <span>
-                ● Healthcare
-                <b>25%</b>
+                ● Food Support
+                <b>0</b>
               </span>
 
               <span>
-                ● Environment
-                <b>15%</b>
+                ● Medical Assistance
+                <b>0</b>
               </span>
 
               <span>
-                ● Animal Welfare
-                <b>15%</b>
+                ● Learning Materials
+                <b>0</b>
               </span>
 
               <span>
-                ● Others
-                <b>10%</b>
+                ● Essential Supplies
+                <b>0</b>
               </span>
-
             </div>
+          </div>
+        </div>
+      </div>
 
+      {/* RECENT ASSISTANCE */}
+      <section className="feed">
+        <div className="feedHead">
+          <div>
+            <h3>Recent Assistance</h3>
+
+            <p>Recently recorded beneficiary assistance.</p>
           </div>
 
+          <span className="liveBadge">
+            <i />
+            RECORDS
+          </span>
         </div>
 
-      </div>
+        <div className="emptyState">No assistance records available yet.</div>
+      </section>
 
+      {/* RECENT BENEFICIARIES */}
+      <section className="feed">
+        <div className="feedHead">
+          <div>
+            <h3>Recent Beneficiaries</h3>
 
-      {/* LIVE FEED */}
-
-      <Feed
-        donations={ds}
-      />
-
-
-      <div className="dashCta">
-
-        <div>
-
-          <h2>
-            Every small act can create
-            a bigger change.
-          </h2>
-
-          <p>
-            Support a cause that matters
-            to you.
-          </p>
-
+            <p>Recently registered beneficiaries.</p>
+          </div>
         </div>
 
-
-        <Link
-          className="btn primary"
-          to="/add-donation"
-        >
-          Donate Now
-          <Heart size={18} />
-        </Link>
-
-      </div>
-
+        <div className="emptyState">No beneficiary records available yet.</div>
+      </section>
     </Layout>
   );
 }
-
 
 /* =========================================================
    LOGIN / SIGNUP
 ========================================================= */
 
-function Auth({
-  signup = false,
-}) {
+function Auth({ signup = false }) {
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const [showConfirm, setShowConfirm] =
-    useState(false);
+  const [error, setError] = useState("");
 
-  const [error, setError] =
-    useState("");
-
-  const [success, setSuccess] =
-    useState("");
+  const [success, setSuccess] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -1344,91 +808,49 @@ function Auth({
     confirm: "",
   });
 
-  const navigate =
-    useNavigate();
-
+  const navigate = useNavigate();
 
   const updateField = (e) => {
-
     setForm({
       ...form,
-      [e.target.name]:
-        e.target.value,
+      [e.target.name]: e.target.value,
     });
-
   };
 
-
   const submit = (e) => {
-
     e.preventDefault();
 
     setError("");
     setSuccess("");
 
-
     if (!form.email) {
-      return setError(
-        "Please enter your email address."
-      );
+      return setError("Please enter your email address.");
     }
-
 
     if (!form.password) {
-      return setError(
-        "Please enter your password."
-      );
+      return setError("Please enter your password.");
     }
 
-
     if (signup) {
-
       if (!form.name) {
-        return setError(
-          "Please enter your name."
-        );
+        return setError("Please enter your name.");
       }
 
+      if (form.password.length < 6) {
+        return setError("Password must contain at least 6 characters.");
+      }
+
+      if (form.password !== form.confirm) {
+        return setError("Passwords do not match.");
+      }
+
+      const users = JSON.parse(localStorage.getItem("tripti_users") || "[]");
 
       if (
-        form.password.length < 6
+        users.some((u) => u.email.toLowerCase() === form.email.toLowerCase())
       ) {
-        return setError(
-          "Password must contain at least 6 characters."
-        );
+        return setError("An account with this email already exists.");
       }
-
-
-      if (
-        form.password !==
-        form.confirm
-      ) {
-        return setError(
-          "Passwords do not match."
-        );
-      }
-
-
-      const users =
-        JSON.parse(
-          localStorage.getItem(
-            "tripti_users"
-          ) || "[]"
-        );
-
-
-      if (
-        users.some(
-          (u) =>
-            u.email.toLowerCase() ===
-            form.email.toLowerCase()
-        )
-      ) {
-        return setError(
-          "An account with this email already exists."
-        );
-      }
-
 
       const newUser = {
         name: form.name,
@@ -1436,130 +858,73 @@ function Auth({
         password: form.password,
       };
 
-
       users.push(newUser);
 
-
-      localStorage.setItem(
-        "tripti_users",
-        JSON.stringify(users)
-      );
-
+      localStorage.setItem("tripti_users", JSON.stringify(users));
 
       localStorage.setItem(
         "tripti_user",
         JSON.stringify({
           name: form.name,
           email: form.email,
-        })
+        }),
       );
 
+      window.dispatchEvent(new Event("tripti-user-update"));
 
-      window.dispatchEvent(
-        new Event("tripti-user-update")
-      );
-
-
-      setSuccess(
-        "Account created successfully!"
-      );
-
+      setSuccess("Account created successfully!");
 
       setTimeout(() => {
         navigate("/dashboard");
       }, 700);
-
     } else {
+      const users = JSON.parse(localStorage.getItem("tripti_users") || "[]");
 
-      const users =
-        JSON.parse(
-          localStorage.getItem(
-            "tripti_users"
-          ) || "[]"
-        );
-
-
-      const found =
-        users.find(
-          (u) =>
-            u.email.toLowerCase() ===
-              form.email.toLowerCase() &&
-            u.password ===
-              form.password
-        );
-
+      const found = users.find(
+        (u) =>
+          u.email.toLowerCase() === form.email.toLowerCase() &&
+          u.password === form.password,
+      );
 
       if (!found) {
         return setError(
-          "Invalid email or password. Please create an account first."
+          "Invalid email or password. Please create an account first.",
         );
       }
-
 
       localStorage.setItem(
         "tripti_user",
         JSON.stringify({
           name: found.name,
           email: found.email,
-        })
+        }),
       );
 
-
-      window.dispatchEvent(
-        new Event("tripti-user-update")
-      );
-
+      window.dispatchEvent(new Event("tripti-user-update"));
 
       navigate("/dashboard");
-
     }
-
   };
-
 
   return (
     <div className="authPage">
-
       <div className="authCard">
-
         <div className="authBrand">
-
-          <img
-            src="/tripti-logo.jpg"
-            alt="Tripti Foundation"
-          />
+          <img src="/tripti-logo.jpg" alt="Tripti Foundation" />
 
           <div className="authBrandText">
+            <h2>Tripti Foundation</h2>
 
-            <h2>
-              Tripti Foundation
-            </h2>
-
-            <p>
-              Education • Empowerment •
-              Service
-            </p>
-
+            <p>Education • Empowerment • Service</p>
           </div>
-
         </div>
 
-
         <div className="authContent">
-
           <span className="authEyebrow">
-            {signup
-              ? "Join our community"
-              : "Welcome back"}
+            {signup ? "Join our community" : "Welcome back"}
           </span>
 
-
-          <h1>
-            {signup
-              ? "Create your account"
-              : "Welcome Back!"}
-          </h1>
-
+          <h1>{signup ? "Create your account" : "Welcome Back!"}</h1>
 
           <p className="authSubtitle">
             {signup
@@ -1567,35 +932,16 @@ function Auth({
               : "Login to continue your donation journey."}
           </p>
 
+          {error && <div className="authMessage error">{error}</div>}
 
-          {error && (
-            <div className="authMessage error">
-              {error}
-            </div>
-          )}
+          {success && <div className="authMessage success">{success}</div>}
 
-
-          {success && (
-            <div className="authMessage success">
-              {success}
-            </div>
-          )}
-
-
-          <form
-            className="authForm"
-            onSubmit={submit}
-          >
-
+          <form className="authForm" onSubmit={submit}>
             {signup && (
               <label>
-
-                <span>
-                  Full Name
-                </span>
+                <span>Full Name</span>
 
                 <div className="inputWrap">
-
                   <User size={18} />
 
                   <input
@@ -1604,21 +950,14 @@ function Auth({
                     onChange={updateField}
                     placeholder="Your full name"
                   />
-
                 </div>
-
               </label>
             )}
 
-
             <label>
-
-              <span>
-                Email address
-              </span>
+              <span>Email address</span>
 
               <div className="inputWrap">
-
                 <Mail size={18} />
 
                 <input
@@ -1628,28 +967,17 @@ function Auth({
                   onChange={updateField}
                   placeholder="Enter your email"
                 />
-
               </div>
-
             </label>
 
-
             <label>
-
-              <span>
-                Password
-              </span>
+              <span>Password</span>
 
               <div className="inputWrap">
-
                 <LockKeyhole size={18} />
 
                 <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={form.password}
                   onChange={updateField}
@@ -1659,41 +987,22 @@ function Auth({
                 <button
                   type="button"
                   className="passwordToggle"
-                  onClick={() =>
-                    setShowPassword(
-                      !showPassword
-                    )
-                  }
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
-
               </div>
-
             </label>
-
 
             {signup && (
               <label>
-
-                <span>
-                  Confirm Password
-                </span>
+                <span>Confirm Password</span>
 
                 <div className="inputWrap">
-
                   <LockKeyhole size={18} />
 
                   <input
-                    type={
-                      showConfirm
-                        ? "text"
-                        : "password"
-                    }
+                    type={showConfirm ? "text" : "password"}
                     name="confirm"
                     value={form.confirm}
                     onChange={updateField}
@@ -1703,38 +1012,20 @@ function Auth({
                   <button
                     type="button"
                     className="passwordToggle"
-                    onClick={() =>
-                      setShowConfirm(
-                        !showConfirm
-                      )
-                    }
+                    onClick={() => setShowConfirm(!showConfirm)}
                   >
-                    {showConfirm ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
+                    {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
-
                 </div>
-
               </label>
             )}
 
-
             {!signup && (
               <div className="authOptions">
-
                 <label className="remember">
+                  <input type="checkbox" />
 
-                  <input
-                    type="checkbox"
-                  />
-
-                  <span>
-                    Remember me
-                  </span>
-
+                  <span>Remember me</span>
                 </label>
 
                 <button
@@ -1742,487 +1033,273 @@ function Auth({
                   className="forgot"
                   onClick={() =>
                     alert(
-                      "Password recovery will be connected to the backend later."
+                      "Password recovery will be connected to the backend later.",
                     )
                   }
                 >
                   Forgot password?
                 </button>
-
               </div>
             )}
 
-
-            <button
-              className="authSubmit"
-              type="submit"
-            >
-              {signup
-                ? "Create Account"
-                : "Login"}
+            <button className="authSubmit" type="submit">
+              {signup ? "Create Account" : "Login"}
             </button>
-
           </form>
-
 
           <div className="authDivider">
             <span>or</span>
           </div>
-
 
           <button
             className="googleBtn"
             type="button"
             onClick={() =>
               alert(
-                "Google login is a frontend demo. Connect it to a backend later."
+                "Google login is a frontend demo. Connect it to a backend later.",
               )
             }
           >
-            <span className="googleG">
-              G
-            </span>
-
+            <span className="googleG">G</span>
             Continue with Google
           </button>
 
-
           <p className="authBottom">
-
-            {signup
-              ? "Already have an account?"
-              : "Don't have an account?"}
-
-            {" "}
-
-            <Link
-              to={
-                signup
-                  ? "/login"
-                  : "/signup"
-              }
-            >
-              {signup
-                ? "Login"
-                : "Sign Up"}
+            {signup ? "Already have an account?" : "Don't have an account?"}{" "}
+            <Link to={signup ? "/login" : "/signup"}>
+              {signup ? "Login" : "Sign Up"}
             </Link>
-
           </p>
-
         </div>
-
       </div>
-
     </div>
   );
 }
-
 
 /* =========================================================
    CAUSES PAGE
 ========================================================= */
 
 function Causes() {
-
   return (
     <>
       <PublicNav />
 
       <div className="pageContainer">
-
         <div className="pageHeading">
+          <span className="eyebrow">Make a Difference</span>
 
-          <span className="eyebrow">
-            Make a Difference
-          </span>
-
-          <h1>
-            Causes that need your support
-          </h1>
+          <h1>Causes that need your support</h1>
 
           <p>
-            Choose a cause close to your
-            heart and help create a better
-            future.
+            Choose a cause close to your heart and help create a better future.
           </p>
-
         </div>
-
 
         <div className="causePageGrid">
-
           {causes.map((c) => (
-            <CauseCard
-              key={c[0]}
-              c={c}
-              large
-            />
+            <CauseCard key={c[0]} c={c} large />
           ))}
-
         </div>
-
       </div>
     </>
   );
 }
-
 
 /* =========================================================
    MY DONATIONS
 ========================================================= */
 
 function MyDonations() {
+  const [donations, setDonations] = useState(getD());
 
-  const [donations, setDonations] =
-    useState(getD());
-
-  const [search, setSearch] =
-    useState("");
-
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
+    const update = () => setDonations(getD());
 
-    const update = () =>
-      setDonations(getD());
+    window.addEventListener("tripti-update", update);
 
-    window.addEventListener(
-      "tripti-update",
-      update
-    );
-
-    return () =>
-      window.removeEventListener(
-        "tripti-update",
-        update
-      );
-
+    return () => window.removeEventListener("tripti-update", update);
   }, []);
 
-
-  const filtered =
-    donations.filter((d) =>
-      `${d.cause} ${d.donor}`
-        .toLowerCase()
-        .includes(
-          search.toLowerCase()
-        )
-    );
-
+  const filtered = donations.filter((d) =>
+    `${d.cause} ${d.donor}`.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <Layout>
-
       <div className="dashboardTop">
-
         <div>
-          <h1>
-            My Donations
-          </h1>
+          <h1>My Donations</h1>
 
-          <p>
-            View and manage your donation
-            history.
-          </p>
+          <p>View and manage your donation history.</p>
         </div>
-
       </div>
 
-
       <div className="tableCard">
-
         <div className="tableToolbar">
-
           <div className="searchBox">
-
             <Search size={18} />
 
             <input
               placeholder="Search by cause or donor..."
               value={search}
-              onChange={(e) =>
-                setSearch(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setSearch(e.target.value)}
             />
-
           </div>
-
 
           <button className="filterBtn">
             <SlidersHorizontal size={17} />
             Filter
           </button>
-
         </div>
 
-
         <div className="donationTable">
-
           <div className="tableHeader">
-
             <span>Cause</span>
             <span>Amount</span>
             <span>Date</span>
             <span>Status</span>
-
           </div>
 
-
           {filtered.map((d) => (
-
-            <div
-              className="tableRow"
-              key={d.id}
-            >
-
+            <div className="tableRow" key={d.id}>
               <div className="tableCause">
-
-                <span>
-                  {iconFor(d.cause)}
-                </span>
+                <span>{iconFor(d.cause)}</span>
 
                 <div>
-
-                  <b>
-                    {d.cause}
-                  </b>
+                  <b>{d.cause}</b>
 
                   <small>
                     {d.anonymous
                       ? "Anonymous donation"
                       : `Donated by ${d.donor}`}
                   </small>
-
                 </div>
-
               </div>
 
+              <strong>{money(d.amount)}</strong>
 
-              <strong>
-                {money(d.amount)}
-              </strong>
+              <span>{d.date}</span>
 
-
-              <span>
-                {d.date}
-              </span>
-
-
-              <span className="status">
-                {d.status}
-              </span>
-
+              <span className="status">{d.status}</span>
             </div>
-
           ))}
-
         </div>
-
       </div>
-
     </Layout>
   );
 }
-
 
 /* =========================================================
    ADD DONATION
 ========================================================= */
 
 function AddDonation() {
+  const currentUser = getUser();
 
-  const currentUser =
-    getUser();
+  const [form, setForm] = useState({
+    cause: causes[0][0],
+    amount: "",
+    email: currentUser?.email || "",
+    name: currentUser?.name || "",
+    message: "",
+    anonymous: false,
+  });
 
-
-  const [form, setForm] =
-    useState({
-      cause: causes[0][0],
-      amount: "",
-      email:
-        currentUser?.email || "",
-      name:
-        currentUser?.name || "",
-      message: "",
-      anonymous: false,
-    });
-
-
-  const [message, setMessage] =
-    useState("");
-
+  const [message, setMessage] = useState("");
 
   const update = (e) => {
-
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = e.target;
+    const { name, value, type, checked } = e.target;
 
     setForm({
       ...form,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value,
+      [name]: type === "checkbox" ? checked : value,
     });
-
   };
 
-
   const donate = (e) => {
-
     e.preventDefault();
 
     setMessage("");
 
-
-    if (
-      !form.amount ||
-      Number(form.amount) <= 0
-    ) {
-      return setMessage(
-        "Please enter a valid donation amount."
-      );
+    if (!form.amount || Number(form.amount) <= 0) {
+      return setMessage("Please enter a valid donation amount.");
     }
-
 
     if (!form.email) {
       return setMessage(
-        "Please enter your email so we can prepare your appreciation message."
+        "Please enter your email so we can prepare your appreciation message.",
       );
     }
 
-
     const newDonation = {
+      id: Date.now().toString(),
 
-      id:
-        Date.now().toString(),
+      donor: form.anonymous ? "Anonymous Donor" : form.name || "Guest Donor",
 
-      donor:
-        form.anonymous
-          ? "Anonymous Donor"
-          : form.name ||
-            "Guest Donor",
+      amount: Number(form.amount),
 
-      amount:
-        Number(form.amount),
+      cause: form.cause,
 
-      cause:
-        form.cause,
+      date: today(),
 
-      date:
-        today(),
+      anonymous: form.anonymous,
 
-      anonymous:
-        form.anonymous,
+      status: "Completed",
 
-      status:
-        "Completed",
+      email: form.email,
 
-      email:
-        form.email,
-
-      message:
-        form.message,
-
+      message: form.message,
     };
 
-
-    const updated = [
-      newDonation,
-      ...getD(),
-    ];
-
+    const updated = [newDonation, ...getD()];
 
     saveD(updated);
-
 
     setMessage(
       form.anonymous
         ? "Donation recorded successfully. Thank you for supporting Tripti Foundation!"
-        : `Donation successful! An appreciation email has been prepared for ${form.email}.`
+        : `Donation successful! An appreciation email has been prepared for ${form.email}.`,
     );
-
 
     setForm({
       ...form,
       amount: "",
       message: "",
     });
-
   };
-
 
   return (
     <Layout>
-
       <div className="dashboardTop">
-
         <div>
+          <h1>Add Donation</h1>
 
-          <h1>
-            Add Donation
-          </h1>
-
-          <p>
-            Your support makes a real
-            difference.
-          </p>
-
+          <p>Your support makes a real difference.</p>
         </div>
-
       </div>
 
-
       <div className="donationPage">
-
-        <form
-          className="donationForm"
-          onSubmit={donate}
-        >
-
-          <h2>
-            Make a Donation
-          </h2>
-
+        <form className="donationForm" onSubmit={donate}>
+          <h2>Make a Donation</h2>
 
           <label>
+            <span>Select Cause</span>
 
-            <span>
-              Select Cause
-            </span>
-
-            <select
-              name="cause"
-              value={form.cause}
-              onChange={update}
-            >
-              {causes.map(
-                (c) => (
-                  <option
-                    key={c[0]}
-                    value={c[0]}
-                  >
-                    {c[0]}
-                  </option>
-                )
-              )}
+            <select name="cause" value={form.cause} onChange={update}>
+              {causes.map((c) => (
+                <option key={c[0]} value={c[0]}>
+                  {c[0]}
+                </option>
+              ))}
             </select>
-
           </label>
 
-
           <div className="twoFields">
-
             <label>
-
-              <span>
-                Amount (₹)
-              </span>
+              <span>Amount (₹)</span>
 
               <input
                 type="number"
@@ -2232,15 +1309,10 @@ function AddDonation() {
                 onChange={update}
                 placeholder="Enter amount"
               />
-
             </label>
 
-
             <label>
-
-              <span>
-                Email
-              </span>
+              <span>Email</span>
 
               <input
                 type="email"
@@ -2249,18 +1321,12 @@ function AddDonation() {
                 onChange={update}
                 placeholder="your@email.com"
               />
-
             </label>
-
           </div>
-
 
           {!form.anonymous && (
             <label>
-
-              <span>
-                Your Name
-              </span>
+              <span>Your Name</span>
 
               <input
                 type="text"
@@ -2269,13 +1335,10 @@ function AddDonation() {
                 onChange={update}
                 placeholder="Enter your name"
               />
-
             </label>
           )}
 
-
           <label className="anonymousBox">
-
             <input
               type="checkbox"
               name="anonymous"
@@ -2284,26 +1347,16 @@ function AddDonation() {
             />
 
             <div>
-
-              <b>
-                Donate anonymously
-              </b>
+              <b>Donate anonymously</b>
 
               <small>
-                Your name will not be shown
-                on the public live dashboard.
+                Your name will not be shown on the public live dashboard.
               </small>
-
             </div>
-
           </label>
 
-
           <label>
-
-            <span>
-              Add a message (optional)
-            </span>
+            <span>Add a message (optional)</span>
 
             <textarea
               name="message"
@@ -2312,9 +1365,7 @@ function AddDonation() {
               placeholder="Write a message..."
               rows="4"
             />
-
           </label>
-
 
           {message && (
             <div className="donationSuccess">
@@ -2323,469 +1374,820 @@ function AddDonation() {
             </div>
           )}
 
-
-          <button
-            type="submit"
-            className="donateButton"
-          >
+          <button type="submit" className="donateButton">
             Donate Now
             <Heart size={18} />
           </button>
-
         </form>
 
-
         <div className="donationInfo">
+          <div className="plantImage">🌱</div>
 
-          <div className="plantImage">
-            🌱
-          </div>
-
-
-          <h3>
-            Every donation matters.
-          </h3>
+          <h3>Every donation matters.</h3>
 
           <p>
-            Your contribution helps Tripti
-            Foundation support education,
-            healthcare, environment and
-            community initiatives.
+            Your contribution helps Tripti Foundation support education,
+            healthcare, environment and community initiatives.
           </p>
 
-
           <div className="infoPoint">
-
             <ShieldCheck />
 
-            <span>
-              Transparent donation tracking
-            </span>
-
+            <span>Transparent donation tracking</span>
           </div>
 
-
           <div className="infoPoint">
-
             <Mail />
 
-            <span>
-              Appreciation message after
-              your donation
-            </span>
-
+            <span>Appreciation message after your donation</span>
           </div>
-
 
           <div className="infoPoint">
-
             <Heart />
 
-            <span>
-              Make a meaningful impact
-            </span>
-
+            <span>Make a meaningful impact</span>
           </div>
-
         </div>
-
       </div>
-
     </Layout>
   );
 }
-
 
 /* =========================================================
    IMPACT PAGE
 ========================================================= */
 
 function Impact() {
-
   const donations = getD();
 
-  const total = donations.reduce(
-    (a, d) =>
-      a + Number(d.amount),
-    0
-  );
-
+  const total = donations.reduce((a, d) => a + Number(d.amount), 0);
 
   return (
     <Layout>
-
       <div className="dashboardTop">
-
         <div>
+          <h1>Your Impact</h1>
 
-          <h1>
-            Your Impact
-          </h1>
-
-          <p>
-            See how your contributions are
-            making a difference.
-          </p>
-
+          <p>See how your contributions are making a difference.</p>
         </div>
-
       </div>
 
-
       <div className="impactStats">
-
         <div>
           <Leaf />
-          <strong>
-            {new Set(
-              donations.map(
-                (d) => d.cause
-              )
-            ).size}
-          </strong>
-          <small>
-            Causes Supported
-          </small>
+          <strong>{new Set(donations.map((d) => d.cause)).size}</strong>
+          <small>Causes Supported</small>
         </div>
-
 
         <div>
           <Users />
-          <strong>
-            1,250+
-          </strong>
-          <small>
-            Lives Impacted
-          </small>
+          <strong>1,250+</strong>
+          <small>Lives Impacted</small>
         </div>
-
 
         <div>
           <TreePine />
-          <strong>
-            500+
-          </strong>
-          <small>
-            Trees Planted
-          </small>
+          <strong>500+</strong>
+          <small>Trees Planted</small>
         </div>
-
 
         <div>
           <Heart />
-          <strong>
-            100%
-          </strong>
-          <small>
-            Impact Score
-          </small>
+          <strong>100%</strong>
+          <small>Impact Score</small>
         </div>
-
       </div>
-
 
       <div className="impactContent">
-
         <div className="recentImpact">
+          <h2>Recent Impact</h2>
 
-          <h2>
-            Recent Impact
-          </h2>
+          {donations.slice(0, 4).map((d) => (
+            <div className="impactRow" key={d.id}>
+              <span>{iconFor(d.cause)}</span>
 
+              <div>
+                <b>Supported {d.cause}</b>
 
-          {donations
-            .slice(0, 4)
-            .map((d) => (
-
-              <div
-                className="impactRow"
-                key={d.id}
-              >
-
-                <span>
-                  {iconFor(d.cause)}
-                </span>
-
-                <div>
-
-                  <b>
-                    Supported{" "}
-                    {d.cause}
-                  </b>
-
-                  <small>
-                    Contribution of{" "}
-                    {money(d.amount)}
-                  </small>
-
-                </div>
-
-                <small>
-                  {d.date}
-                </small>
-
+                <small>Contribution of {money(d.amount)}</small>
               </div>
 
-            ))}
-
+              <small>{d.date}</small>
+            </div>
+          ))}
         </div>
-
 
         <div className="impactQuote">
-
           <Heart />
 
-          <p>
-            "A little kindness goes
-            a long way."
-          </p>
-
+          <p>"A little kindness goes a long way."</p>
         </div>
-
       </div>
-
     </Layout>
   );
 }
-
 
 /* =========================================================
    PROFILE
 ========================================================= */
 
 function Profile() {
+  const user = getUser();
 
-  const user =
-    getUser();
+  const [name, setName] = useState(user?.name || "");
 
+  const [email, setEmail] = useState(user?.email || "");
 
-  const [name, setName] =
-    useState(
-      user?.name || ""
-    );
-
-  const [email, setEmail] =
-    useState(
-      user?.email || ""
-    );
-
-  const [saved, setSaved] =
-    useState(false);
-
+  const [saved, setSaved] = useState(false);
 
   const saveProfile = (e) => {
-
     e.preventDefault();
-
 
     localStorage.setItem(
       "tripti_user",
       JSON.stringify({
         name,
         email,
-      })
+      }),
     );
 
-
     setSaved(true);
-
 
     setTimeout(() => {
       setSaved(false);
     }, 2500);
-
   };
-
 
   return (
     <Layout>
-
       <div className="dashboardTop">
-
         <div>
+          <h1>Profile</h1>
 
-          <h1>
-            Profile
-          </h1>
-
-          <p>
-            Manage your account details.
-          </p>
-
+          <p>Manage your account details.</p>
         </div>
-
       </div>
 
-
       <div className="profileCard">
-
         <div className="profileAvatar">
-          {name
-            ?.charAt(0)
-            ?.toUpperCase() || "K"}
+          {name?.charAt(0)?.toUpperCase() || "K"}
         </div>
 
-
-        <form
-          className="profileForm"
-          onSubmit={saveProfile}
-        >
-
+        <form className="profileForm" onSubmit={saveProfile}>
           <label>
-
-            <span>
-              Full Name
-            </span>
+            <span>Full Name</span>
 
             <input
               value={name}
-              onChange={(e) =>
-                setName(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
             />
-
           </label>
 
-
           <label>
-
-            <span>
-              Email
-            </span>
+            <span>Email</span>
 
             <input
               type="email"
               value={email}
-              onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email"
             />
-
           </label>
 
-
-          <button
-            className="saveProfile"
-            type="submit"
-          >
+          <button className="saveProfile" type="submit">
             <Save size={17} />
             Save Profile
           </button>
 
-
           {saved && (
-            <div className="profileSaved">
-              Profile saved successfully.
-            </div>
+            <div className="profileSaved">Profile saved successfully.</div>
           )}
-
         </form>
+      </div>
+    </Layout>
+  );
+}
 
+/* =========================================================
+   APP
+========================================================= */
+
+function Beneficiaries() {
+  const [beneficiaries, setBeneficiaries] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+
+  const [form, setForm] = React.useState({
+    name: "",
+    age: "",
+    contact: "",
+    address: "",
+    support: "",
+  });
+
+  const addBeneficiary = (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.contact) return;
+
+    setBeneficiaries([
+      ...beneficiaries,
+      {
+        ...form,
+        id: Date.now(),
+      },
+    ]);
+
+    setForm({
+      name: "",
+      age: "",
+      contact: "",
+      address: "",
+      support: "",
+    });
+  };
+
+  const filteredBeneficiaries = beneficiaries.filter(
+    (beneficiary) =>
+      beneficiary.name
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      beneficiary.contact.includes(search)
+  );
+
+  return (
+    <Layout>
+      {/* PAGE HEADER */}
+      <div className="dashboardTop">
+        <div>
+          <h1>Beneficiaries</h1>
+          <p>Manage and maintain beneficiary records.</p>
+        </div>
       </div>
 
+      {/* ADD BENEFICIARY */}
+      <div className="feed">
+        <div className="feedHead">
+          <div>
+            <h3>Add Beneficiary</h3>
+            <p>Register a new beneficiary in the system.</p>
+          </div>
+        </div>
+
+        <form className="donationForm" onSubmit={addBeneficiary}>
+          <div className="twoFields">
+            <input
+              type="text"
+              placeholder="Beneficiary Name"
+              value={form.name}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  name: e.target.value,
+                })
+              }
+            />
+
+            <input
+              type="number"
+              placeholder="Age"
+              value={form.age}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  age: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="twoFields">
+            <input
+              type="text"
+              placeholder="Contact Number"
+              value={form.contact}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  contact: e.target.value,
+                })
+              }
+            />
+
+            <input
+              type="text"
+              placeholder="Required Support"
+              value={form.support}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  support: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <input
+            type="text"
+            placeholder="Address"
+            value={form.address}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                address: e.target.value,
+              })
+            }
+          />
+
+          <button type="submit" className="btn primary">
+            Add Beneficiary
+          </button>
+        </form>
+      </div>
+
+      {/* BENEFICIARY RECORDS */}
+      <div className="tableCard">
+        <div className="tableToolbar">
+          <div>
+            <h3>Beneficiary Records</h3>
+            <p>View and search registered beneficiaries.</p>
+          </div>
+
+          <div className="searchBox">
+            <input
+              type="text"
+              placeholder="Search by name or contact..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="tableHeader">
+          <span>Name</span>
+          <span>Age</span>
+          <span>Contact</span>
+          <span>Required Support</span>
+          <span>Action</span>
+        </div>
+
+        {beneficiaries.length === 0 ? (
+          <div className="emptyState">
+            No beneficiaries added yet.
+          </div>
+        ) : filteredBeneficiaries.length === 0 ? (
+          <div className="emptyState">
+            No beneficiary found matching your search.
+          </div>
+        ) : (
+          filteredBeneficiaries.map((beneficiary) => (
+            <div className="tableRow" key={beneficiary.id}>
+              <div className="tableCause">
+                <strong>{beneficiary.name}</strong>
+                <small>{beneficiary.address || "No address"}</small>
+              </div>
+
+              <span>{beneficiary.age || "—"}</span>
+
+              <span>{beneficiary.contact}</span>
+
+              <span>
+                <span className="status">
+                  {beneficiary.support || "Not specified"}
+                </span>
+              </span>
+
+              <button
+                className="btn outline"
+                onClick={() =>
+                  setBeneficiaries(
+                    beneficiaries.filter(
+                      (item) => item.id !== beneficiary.id
+                    )
+                  )
+                }
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
+      </div>
     </Layout>
   );
 }
 
 
 /* =========================================================
-   APP
+   ASSISTANCE
 ========================================================= */
 
-function App() {
+function Assistance() {
+  const [assistanceRecords, setAssistanceRecords] = React.useState([]);
+
+  const [form, setForm] = React.useState({
+    beneficiary: "",
+    type: "",
+    date: "",
+    description: "",
+  });
+
+  const recordAssistance = (e) => {
+    e.preventDefault();
+
+    if (!form.beneficiary || !form.type || !form.date) return;
+
+    setAssistanceRecords([
+      ...assistanceRecords,
+      {
+        ...form,
+        id: Date.now(),
+      },
+    ]);
+
+    setForm({
+      beneficiary: "",
+      type: "",
+      date: "",
+      description: "",
+    });
+  };
 
   return (
-    <Routes>
+    <Layout>
+      {/* PAGE HEADER */}
+      <div className="dashboardTop">
+        <div>
+          <h1>Assistance</h1>
+          <p>Record and manage assistance provided to beneficiaries.</p>
+        </div>
+      </div>
 
-      <Route
-        path="/"
-        element={<Home />}
-      />
+      {/* RECORD ASSISTANCE */}
+      <div className="feed">
+        <div className="feedHead">
+          <div>
+            <h3>Record Assistance</h3>
+            <p>Add a new assistance record for a beneficiary.</p>
+          </div>
+        </div>
 
-      <Route
-        path="/login"
-        element={
-          <Auth />
-        }
-      />
+        <form className="donationForm" onSubmit={recordAssistance}>
+          <div className="twoFields">
+            <input
+              type="text"
+              placeholder="Beneficiary Name"
+              value={form.beneficiary}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  beneficiary: e.target.value,
+                })
+              }
+            />
 
-      <Route
-        path="/signup"
-        element={
-          <Auth signup />
-        }
-      />
+            <select
+              value={form.type}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  type: e.target.value,
+                })
+              }
+            >
+              <option value="">Select Assistance Type</option>
+              <option value="Educational Support">
+                Educational Support
+              </option>
+              <option value="Food Support">
+                Food Support
+              </option>
+              <option value="Medical Assistance">
+                Medical Assistance
+              </option>
+              <option value="Learning Materials">
+                Learning Materials
+              </option>
+              <option value="Essential Supplies">
+                Essential Supplies
+              </option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
-      <Route
-        path="/dashboard"
-        element={
-          <Dashboard />
-        }
-      />
+          <div className="twoFields">
+            <input
+              type="date"
+              value={form.date}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  date: e.target.value,
+                })
+              }
+            />
 
-      <Route
-        path="/my-donations"
-        element={
-          <MyDonations />
-        }
-      />
+            <input
+              type="text"
+              placeholder="Description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  description: e.target.value,
+                })
+              }
+            />
+          </div>
 
-      <Route
-        path="/causes"
-        element={
-          <Causes />
-        }
-      />
+          <button type="submit" className="btn primary">
+            Record Assistance
+          </button>
+        </form>
+      </div>
 
-      <Route
-        path="/add-donation"
-        element={
-          <AddDonation />
-        }
-      />
+      {/* ASSISTANCE HISTORY */}
+      <div className="tableCard">
+        <div className="tableToolbar">
+          <div>
+            <h3>Assistance History</h3>
+            <p>
+              View all recorded assistance provided to beneficiaries.
+            </p>
+          </div>
+        </div>
 
-      <Route
-        path="/impact"
-        element={
-          <Impact />
-        }
-      />
+        <div className="tableHeader">
+          <span>Beneficiary</span>
+          <span>Type</span>
+          <span>Date</span>
+          <span>Description</span>
+          <span>Action</span>
+        </div>
 
-      <Route
-        path="/profile"
-        element={
-          <Profile />
-        }
-      />
+        {assistanceRecords.length === 0 ? (
+          <div className="emptyState">
+            No assistance records added yet.
+          </div>
+        ) : (
+          assistanceRecords.map((record) => (
+            <div className="tableRow" key={record.id}>
+              <div className="tableCause">
+                <strong>{record.beneficiary}</strong>
+              </div>
 
-      <Route
-        path="*"
-        element={
-          <Home />
-        }
-      />
+              <span>
+                <span className="status">{record.type}</span>
+              </span>
 
-    </Routes>
+              <span>{record.date}</span>
+
+              <span>{record.description || "—"}</span>
+
+              <button
+                className="btn outline"
+                onClick={() =>
+                  setAssistanceRecords(
+                    assistanceRecords.filter(
+                      (item) => item.id !== record.id
+                    )
+                  )
+                }
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </Layout>
   );
 }
 
 
 /* =========================================================
+   PENDING SUPPORT
+========================================================= */
+
+function PendingSupport() {
+  const [pendingRecords, setPendingRecords] = React.useState([]);
+
+  const [form, setForm] = React.useState({
+    beneficiary: "",
+    requiredSupport: "",
+    priority: "",
+    description: "",
+  });
+
+  const addPendingSupport = (e) => {
+    e.preventDefault();
+
+    if (!form.beneficiary || !form.requiredSupport) return;
+
+    setPendingRecords([
+      ...pendingRecords,
+      {
+        ...form,
+        id: Date.now(),
+      },
+    ]);
+
+    setForm({
+      beneficiary: "",
+      requiredSupport: "",
+      priority: "",
+      description: "",
+    });
+  };
+
+  return (
+    <Layout>
+      {/* PAGE HEADER */}
+      <div className="dashboardTop">
+        <div>
+          <h1>Pending Support</h1>
+          <p>Track beneficiaries who require further assistance.</p>
+        </div>
+      </div>
+
+      {/* ADD PENDING SUPPORT */}
+      <div className="feed">
+        <div className="feedHead">
+          <div>
+            <h3>Add Pending Support</h3>
+            <p>
+              Record support requirements that are still pending.
+            </p>
+          </div>
+        </div>
+
+        <form className="donationForm" onSubmit={addPendingSupport}>
+          <div className="twoFields">
+            <input
+              type="text"
+              placeholder="Beneficiary Name"
+              value={form.beneficiary}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  beneficiary: e.target.value,
+                })
+              }
+            />
+
+            <input
+              type="text"
+              placeholder="Required Support"
+              value={form.requiredSupport}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  requiredSupport: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="twoFields">
+            <select
+              value={form.priority}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  priority: e.target.value,
+                })
+              }
+            >
+              <option value="">Select Priority</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+
+            <input
+              type="text"
+              placeholder="Description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  description: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <button type="submit" className="btn primary">
+            Add Pending Support
+          </button>
+        </form>
+      </div>
+
+      {/* PENDING RECORDS */}
+      <div className="tableCard">
+        <div className="tableToolbar">
+          <div>
+            <h3>Pending Support Records</h3>
+            <p>
+              View beneficiaries who still require additional support.
+            </p>
+          </div>
+        </div>
+
+        <div className="tableHeader">
+          <span>Beneficiary</span>
+          <span>Required Support</span>
+          <span>Priority</span>
+          <span>Description</span>
+          <span>Action</span>
+        </div>
+
+        {pendingRecords.length === 0 ? (
+          <div className="emptyState">
+            No pending support records added yet.
+          </div>
+        ) : (
+          pendingRecords.map((record) => (
+            <div className="tableRow" key={record.id}>
+              <div className="tableCause">
+                <strong>{record.beneficiary}</strong>
+              </div>
+
+              <span>{record.requiredSupport}</span>
+
+              <span>
+                <span className="status">
+                  {record.priority || "Not specified"}
+                </span>
+              </span>
+
+              <span>{record.description || "—"}</span>
+
+              <button
+                className="btn outline"
+                onClick={() =>
+                  setPendingRecords(
+                    pendingRecords.filter(
+                      (item) => item.id !== record.id
+                    )
+                  )
+                }
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </Layout>
+  );
+}
+
+
+/* =========================================================
+   APP ROUTES
+========================================================= */
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+
+      <Route path="/login" element={<Auth />} />
+
+      <Route path="/signup" element={<Auth signup />} />
+
+      <Route path="/dashboard" element={<Dashboard />} />
+
+      <Route
+        path="/beneficiaries"
+        element={<Beneficiaries />}
+      />
+
+      <Route
+        path="/assistance"
+        element={<Assistance />}
+      />
+
+      <Route
+        path="/pending-support"
+        element={<PendingSupport />}
+      />
+
+      <Route path="/profile" element={<Profile />} />
+
+      <Route path="*" element={<Home />} />
+    </Routes>
+  );
+}
+/* =========================================================
    RENDER
 ========================================================= */
 
-createRoot(
-  document.getElementById("root")
-).render(
+createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
