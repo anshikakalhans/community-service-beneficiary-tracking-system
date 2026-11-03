@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import emailjs from "@emailjs/browser";
 
 import { createRoot } from "react-dom/client";
 
@@ -11,8 +12,6 @@ import {
   DeliveryProofHomePreview
 
 } from "./DeliveryProof";
-
-
 
 import {
 
@@ -29,8 +28,6 @@ import {
   useLocation,
 
 } from "react-router-dom";
-
-
 
 import {
 
@@ -96,19 +93,13 @@ import {
 
 } from "lucide-react";
 
-
-
 import "./styles.css";
-
-
 
 /* =========================================================
 
    CAUSES DATA
 
-\========================================================= */
-
-
+\\========================================================= */
 
 const causes = [
 
@@ -158,15 +149,11 @@ const causes = [
 
 ];
 
-
-
 /* =========================================================
 
    SAMPLE DONATIONS
 
-\========================================================= */
-
-
+\\========================================================= */
 
 const seed = [
 
@@ -272,15 +259,11 @@ const seed = [
 
 ];
 
-
-
 /* =========================================================
 
    LOCAL STORAGE HELPERS
 
-\========================================================= */
-
-
+\\========================================================= */
 
 const getD = () => {
 
@@ -288,19 +271,13 @@ const getD = () => {
 
     const stored = JSON.parse(localStorage.getItem("tripti_donations"));
 
-
-
     if (Array.isArray(stored) && stored.length > 0) {
 
       return stored;
 
     }
 
-
-
     localStorage.setItem("tripti_donations", JSON.stringify(seed));
-
-
 
     return seed;
 
@@ -312,19 +289,13 @@ const getD = () => {
 
 };
 
-
-
 const saveD = (data) => {
 
   localStorage.setItem("tripti_donations", JSON.stringify(data));
 
-
-
   window.dispatchEvent(new Event("tripti-update"));
 
 };
-
-
 
 const getUser = () => {
 
@@ -340,15 +311,11 @@ const getUser = () => {
 
 };
 
-
-
 const money = (number) => {
 
   return `₹${Number(number || 0).toLocaleString("en-IN")}`;
 
 };
-
-
 
 const today = () => {
 
@@ -364,15 +331,11 @@ const today = () => {
 
 };
 
-
-
 /* =========================================================
 
    LOGO
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Logo() {
 
@@ -396,15 +359,11 @@ function Logo() {
 
 }
 
-
-
 /* =========================================================
 
    PUBLIC NAVBAR
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function PublicNav() {
 
@@ -412,11 +371,7 @@ function PublicNav() {
 
   const [user, setUser] = useState(getUser());
 
-
-
   const navigate = useNavigate();
-
-
 
   useEffect(() => {
 
@@ -426,11 +381,7 @@ function PublicNav() {
 
     };
 
-
-
     window.addEventListener("tripti-user-update", updateUser);
-
-
 
     return () => {
 
@@ -440,35 +391,23 @@ function PublicNav() {
 
   }, []);
 
-
-
   const closeMenu = () => {
 
     setOpen(false);
 
   };
 
-
-
   const logout = () => {
 
     localStorage.removeItem("tripti_user");
 
-
-
     setUser(null);
 
-
-
     closeMenu();
-
-
 
     navigate("/");
 
   };
-
-
 
   return (
 
@@ -478,15 +417,11 @@ function PublicNav() {
 
         <Logo />
 
-
-
         <button className="mobileMenu" onClick={() => setOpen(!open)}>
 
           {open ? <X size={25} /> : <Menu size={25} />}
 
         </button>
-
-
 
         <nav className={`navLinks ${open ? "open" : ""}`}>
 
@@ -496,15 +431,11 @@ function PublicNav() {
 
           </Link>
 
-
-
           <Link to="/causes" onClick={closeMenu}>
 
             Causes
 
           </Link>
-
-
 
           <Link to="/dashboard" onClick={closeMenu}>
 
@@ -513,18 +444,16 @@ function PublicNav() {
           </Link>
 
           <Link to="/delivery-proof" onClick={closeMenu}>
+
             Delivery Proof
+
           </Link>
-
-
 
           <Link to="/add-donation" onClick={closeMenu}>
 
             Donate
 
           </Link>
-
-
 
           {user ? (
 
@@ -535,8 +464,6 @@ function PublicNav() {
                 Profile
 
               </Link>
-
-
 
               <button className="navLogout" onClick={logout}>
 
@@ -555,8 +482,6 @@ function PublicNav() {
                 Login
 
               </Link>
-
-
 
               <Link className="signupBtn" to="/signup" onClick={closeMenu}>
 
@@ -578,23 +503,17 @@ function PublicNav() {
 
 }
 
-
-
 /* =========================================================
 
    SIDEBAR
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Sidebar({ open, onClose }) {
 
   const location = useLocation();
 
   const navigate = useNavigate();
-
-
 
   const links = [
 
@@ -607,35 +526,26 @@ function Sidebar({ open, onClose }) {
     ["/pending-support", "Pending Support", Sparkles],
 
         ["/delivery-proof/manage", "Delivery Proof", ShieldCheck],
+
 ["/profile", "Profile", User],
 
   ];
-
-
 
   const logout = () => {
 
     localStorage.removeItem("tripti_user");
 
-
-
     navigate("/");
-
-
 
     onClose();
 
   };
-
-
 
   return (
 
     <>
 
       <div className={`sideOverlay ${open ? "show" : ""}`} onClick={onClose} />
-
-
 
       <aside className={`sidebar ${open ? "open" : ""}`}>
 
@@ -644,8 +554,6 @@ function Sidebar({ open, onClose }) {
           <Logo />
 
         </div>
-
-
 
         <nav className="sideNav">
 
@@ -665,8 +573,6 @@ function Sidebar({ open, onClose }) {
 
               <Icon size={18} />
 
-
-
               <span>{label}</span>
 
             </Link>
@@ -675,13 +581,9 @@ function Sidebar({ open, onClose }) {
 
         </nav>
 
-
-
         <button className="sidebarLogout" onClick={logout}>
 
           <LogOut size={18} />
-
-
 
           <span>Logout</span>
 
@@ -695,29 +597,21 @@ function Sidebar({ open, onClose }) {
 
 }
 
-
-
 /* =========================================================
 
    APP LAYOUT
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Layout({ children }) {
 
   const [open, setOpen] = useState(false);
-
-
 
   return (
 
     <div className="dashboardApp">
 
       <Sidebar open={open} onClose={() => setOpen(false)} />
-
-
 
       <main className="dashboardMain">
 
@@ -726,8 +620,6 @@ function Layout({ children }) {
           <Menu size={22} />
 
         </button>
-
-
 
         {children}
 
@@ -739,21 +631,15 @@ function Layout({ children }) {
 
 }
 
-
-
 /* =========================================================
 
    LIVE DONATION FEED
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Feed({ donations, compact = false }) {
 
   const list = donations.slice(0, compact ? 5 : 12);
-
-
 
   return (
 
@@ -765,13 +651,9 @@ function Feed({ donations, compact = false }) {
 
           <h3>Live Donation Activity</h3>
 
-
-
           <p>Every contribution creates a little more impact.</p>
 
         </div>
-
-
 
         <span className="liveBadge">
 
@@ -782,8 +664,6 @@ function Feed({ donations, compact = false }) {
         </span>
 
       </div>
-
-
 
       {list.length === 0 ? (
 
@@ -801,25 +681,17 @@ function Feed({ donations, compact = false }) {
 
             </span>
 
-
-
             <div className="feedInfo">
 
               <b>{d.anonymous ? "Anonymous Donor" : d.donor}</b>
-
-
 
               <small>donated to {d.cause}</small>
 
             </div>
 
-
-
             <div className="feedAmount">
 
               <b>{money(d.amount)}</b>
-
-
 
               <small>{d.date}</small>
 
@@ -837,21 +709,15 @@ function Feed({ donations, compact = false }) {
 
 }
 
-
-
 /* =========================================================
 
    HOME PAGE
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Home() {
 
   const [ds, setDs] = useState(getD());
-
-
 
   useEffect(() => {
 
@@ -861,21 +727,13 @@ function Home() {
 
     };
 
-
-
     window.addEventListener("tripti-update", update);
 
-
-
     window.addEventListener("storage", update);
-
-
 
     return () => {
 
       window.removeEventListener("tripti-update", update);
-
-
 
       window.removeEventListener("storage", update);
 
@@ -883,11 +741,7 @@ function Home() {
 
   }, []);
 
-
-
   const total = ds.reduce((a, d) => a + Number(d.amount), 0);
-
-
 
   return (
 
@@ -895,19 +749,13 @@ function Home() {
 
       <PublicNav />
 
-
-
       {/* ================= HERO ================= */}
-
-
 
       <section className="hero">
 
         <div className="heroCopy">
 
           <span className="eyebrow">An Education Trust</span>
-
-
 
           <h1>
 
@@ -919,8 +767,6 @@ function Home() {
 
           </h1>
 
-
-
           <p>
 
             Tripti Foundation helps you make a difference by supporting
@@ -930,8 +776,6 @@ function Home() {
             initiatives.
 
           </p>
-
-
 
           <div className="actions">
 
@@ -943,8 +787,6 @@ function Home() {
 
             </Link>
 
-
-
             <Link className="btn outline" to="/causes">
 
               Explore Causes
@@ -953,21 +795,15 @@ function Home() {
 
           </div>
 
-
-
           <div className="heroStats">
 
             <div className="heroStatItem">
 
               <Users />
 
-
-
               <div>
 
                 <b>1,250+</b>
-
-
 
                 <small>Donors</small>
 
@@ -975,19 +811,13 @@ function Home() {
 
             </div>
 
-
-
             <div className="heroStatItem">
 
               <Heart />
 
-
-
               <div>
 
                 <b>50+</b>
-
-
 
                 <small>Causes Supported</small>
 
@@ -995,19 +825,13 @@ function Home() {
 
             </div>
 
-
-
             <div className="heroStatItem">
 
               <WalletCards />
 
-
-
               <div>
 
                 <b>{money(total)}+</b>
-
-
 
                 <small>Total Donations</small>
 
@@ -1019,11 +843,7 @@ function Home() {
 
         </div>
 
-
-
         {/* RIGHT SIDE LOGO */}
-
-
 
         <div className="heroLogoArea">
 
@@ -1041,8 +861,6 @@ function Home() {
 
           </div>
 
-
-
           <div className="heroLogoText">
 
             <h3>
@@ -1053,8 +871,6 @@ function Home() {
 
             </h3>
 
-
-
             <p>Education • Empowerment • Service</p>
 
           </div>
@@ -1063,11 +879,7 @@ function Home() {
 
       </section>
 
-
-
       {/* ================= CAUSES ================= */}
-
-
 
       <section className="section">
 
@@ -1077,13 +889,9 @@ function Home() {
 
             <span className="eyebrow">Make a Difference</span>
 
-
-
             <h2>Causes that need your support</h2>
 
           </div>
-
-
 
           <Link to="/causes">
 
@@ -1094,8 +902,6 @@ function Home() {
           </Link>
 
         </div>
-
-
 
         <div className="causeGrid">
 
@@ -1109,11 +915,7 @@ function Home() {
 
       </section>
 
-
-
       {/* ================= LIVE ACTIVITY ================= */}
-
-
 
       <section className="section">
 
@@ -1135,15 +937,11 @@ function Home() {
 
 }
 
-
-
 /* =========================================================
 
    ICON FOR CAUSE
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function iconFor(name) {
 
@@ -1153,15 +951,11 @@ function iconFor(name) {
 
   }
 
-
-
   if (name === "Animal Welfare") {
 
     return <PawPrint />;
 
   }
-
-
 
   if (name === "Tree Plantation") {
 
@@ -1169,27 +963,19 @@ function iconFor(name) {
 
   }
 
-
-
   return <BookOpen />;
 
 }
-
-
 
 /* =========================================================
 
    CAUSE CARD
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function CauseCard({ c, large = false }) {
 
   const percentage = Math.min(100, Math.round((c[4] / c[3]) * 100));
-
-
 
   return (
 
@@ -1197,19 +983,11 @@ function CauseCard({ c, large = false }) {
 
       <div className="causeIcon">{iconFor(c[0])}</div>
 
-
-
       <small>Tripti Foundation</small>
-
-
 
       <h3>{c[0]}</h3>
 
-
-
       <p>{c[1]}. Support meaningful work and help create a brighter future.</p>
-
-
 
       <div className="progress">
 
@@ -1225,23 +1003,20 @@ function CauseCard({ c, large = false }) {
 
       </div>
 
-
-
       <div className="causeMeta">
 
         <b>{money(c[4])}</b>
-
-
 
         <span>Goal {money(c[3])}</span>
 
       </div>
 
-
-
       <Link className="btn outline" to="/add-donation" state={{ cause: c[0] }}>
+
         Support this cause
+
         <ArrowRight size={15} />
+
       </Link>
 
     </article>
@@ -1250,15 +1025,11 @@ function CauseCard({ c, large = false }) {
 
 }
 
-
-
 /* =========================================================
 
    DASHBOARD
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Dashboard() {
 
@@ -1274,35 +1045,23 @@ function Dashboard() {
 
           <h1>Community Service Dashboard 👋</h1>
 
-
-
           <p>Beneficiary and assistance records at a glance.</p>
 
         </div>
-
-
 
         <div className="topUser">
 
           <Bell size={22} />
 
-
-
           <span className="userCircle">A</span>
 
-
-
           <span>Admin</span>
-
-
 
           <ChevronDown size={15} />
 
         </div>
 
       </div>
-
-
 
       {/* STAT CARDS */}
 
@@ -1312,15 +1071,9 @@ function Dashboard() {
 
           ["Total Beneficiaries", "0", "Registered beneficiaries", Users],
 
-
-
           ["Assistance Provided", "0", "Total assistance records", HeartPulse],
 
-
-
           ["Pending Support", "0", "Support requirements pending", Sparkles],
-
-
 
           ["Active Records", "0", "Records currently managed", ShieldCheck],
 
@@ -1334,15 +1087,9 @@ function Dashboard() {
 
             </span>
 
-
-
             <small>{title}</small>
 
-
-
             <strong>{value}</strong>
-
-
 
             <em>{text}</em>
 
@@ -1352,8 +1099,6 @@ function Dashboard() {
 
       </div>
 
-
-
       {/* ASSISTANCE OVERVIEW */}
 
       <div className="dashGrid">
@@ -1361,8 +1106,6 @@ function Dashboard() {
         <div className="chart">
 
           <h3>Assistance Overview</h3>
-
-
 
           <div className="bars">
 
@@ -1376,8 +1119,6 @@ function Dashboard() {
 
               },
 
-
-
               {
 
                 label: "Food",
@@ -1385,8 +1126,6 @@ function Dashboard() {
                 value: 0,
 
               },
-
-
 
               {
 
@@ -1396,8 +1135,6 @@ function Dashboard() {
 
               },
 
-
-
               {
 
                 label: "Learning",
@@ -1405,8 +1142,6 @@ function Dashboard() {
                 value: 0,
 
               },
-
-
 
               {
 
@@ -1430,8 +1165,6 @@ function Dashboard() {
 
                 />
 
-
-
                 <small>{item.label}</small>
 
               </div>
@@ -1442,15 +1175,11 @@ function Dashboard() {
 
         </div>
 
-
-
         {/* ASSISTANCE TYPES */}
 
         <div className="chart">
 
           <h3>Assistance by Type</h3>
-
-
 
           <div className="donutWrap">
 
@@ -1464,8 +1193,6 @@ function Dashboard() {
 
             </div>
 
-
-
             <div className="legend">
 
               <span>
@@ -1476,8 +1203,6 @@ function Dashboard() {
 
               </span>
 
-
-
               <span>
 
                 ● Food Support
@@ -1485,8 +1210,6 @@ function Dashboard() {
                 <b>0</b>
 
               </span>
-
-
 
               <span>
 
@@ -1496,8 +1219,6 @@ function Dashboard() {
 
               </span>
 
-
-
               <span>
 
                 ● Learning Materials
@@ -1505,8 +1226,6 @@ function Dashboard() {
                 <b>0</b>
 
               </span>
-
-
 
               <span>
 
@@ -1524,8 +1243,6 @@ function Dashboard() {
 
       </div>
 
-
-
       {/* RECENT ASSISTANCE */}
 
       <section className="feed">
@@ -1536,13 +1253,9 @@ function Dashboard() {
 
             <h3>Recent Assistance</h3>
 
-
-
             <p>Recently recorded beneficiary assistance.</p>
 
           </div>
-
-
 
           <span className="liveBadge">
 
@@ -1554,13 +1267,9 @@ function Dashboard() {
 
         </div>
 
-
-
         <div className="emptyState">No assistance records available yet.</div>
 
       </section>
-
-
 
       {/* RECENT BENEFICIARIES */}
 
@@ -1572,15 +1281,11 @@ function Dashboard() {
 
             <h3>Recent Beneficiaries</h3>
 
-
-
             <p>Recently registered beneficiaries.</p>
 
           </div>
 
         </div>
-
-
 
         <div className="emptyState">No beneficiary records available yet.</div>
 
@@ -1592,33 +1297,21 @@ function Dashboard() {
 
 }
 
-
-
 /* =========================================================
 
    LOGIN / SIGNUP
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Auth({ signup = false }) {
 
   const [showPassword, setShowPassword] = useState(false);
 
-
-
   const [showConfirm, setShowConfirm] = useState(false);
-
-
 
   const [error, setError] = useState("");
 
-
-
   const [success, setSuccess] = useState("");
-
-
 
   const [form, setForm] = useState({
 
@@ -1632,11 +1325,7 @@ function Auth({ signup = false }) {
 
   });
 
-
-
   const navigate = useNavigate();
-
-
 
   const updateField = (e) => {
 
@@ -1650,19 +1339,13 @@ function Auth({ signup = false }) {
 
   };
 
-
-
   const submit = (e) => {
 
     e.preventDefault();
 
-
-
     setError("");
 
     setSuccess("");
-
-
 
     if (!form.email) {
 
@@ -1670,15 +1353,11 @@ function Auth({ signup = false }) {
 
     }
 
-
-
     if (!form.password) {
 
       return setError("Please enter your password.");
 
     }
-
-
 
     if (signup) {
 
@@ -1688,15 +1367,11 @@ function Auth({ signup = false }) {
 
       }
 
-
-
       if (form.password.length < 6) {
 
         return setError("Password must contain at least 6 characters.");
 
       }
-
-
 
       if (form.password !== form.confirm) {
 
@@ -1704,11 +1379,7 @@ function Auth({ signup = false }) {
 
       }
 
-
-
       const users = JSON.parse(localStorage.getItem("tripti_users") || "[]");
-
-
 
       if (
 
@@ -1720,8 +1391,6 @@ function Auth({ signup = false }) {
 
       }
 
-
-
       const newUser = {
 
         name: form.name,
@@ -1732,15 +1401,9 @@ function Auth({ signup = false }) {
 
       };
 
-
-
       users.push(newUser);
 
-
-
       localStorage.setItem("tripti_users", JSON.stringify(users));
-
-
 
       localStorage.setItem(
 
@@ -1756,15 +1419,9 @@ function Auth({ signup = false }) {
 
       );
 
-
-
       window.dispatchEvent(new Event("tripti-user-update"));
 
-
-
       setSuccess("Account created successfully!");
-
-
 
       setTimeout(() => {
 
@@ -1776,8 +1433,6 @@ function Auth({ signup = false }) {
 
       const users = JSON.parse(localStorage.getItem("tripti_users") || "[]");
 
-
-
       const found = users.find(
 
         (u) =>
@@ -1788,8 +1443,6 @@ function Auth({ signup = false }) {
 
       );
 
-
-
       if (!found) {
 
         return setError(
@@ -1799,8 +1452,6 @@ function Auth({ signup = false }) {
         );
 
       }
-
-
 
       localStorage.setItem(
 
@@ -1816,19 +1467,13 @@ function Auth({ signup = false }) {
 
       );
 
-
-
       window.dispatchEvent(new Event("tripti-user-update"));
-
-
 
       navigate("/dashboard");
 
     }
 
   };
-
-
 
   return (
 
@@ -1840,21 +1485,15 @@ function Auth({ signup = false }) {
 
           <img src="/tripti-logo.jpg" alt="Tripti Foundation" />
 
-
-
           <div className="authBrandText">
 
             <h2>Tripti Foundation</h2>
-
-
 
             <p>Education • Empowerment • Service</p>
 
           </div>
 
         </div>
-
-
 
         <div className="authContent">
 
@@ -1864,11 +1503,7 @@ function Auth({ signup = false }) {
 
           </span>
 
-
-
           <h1>{signup ? "Create your account" : "Welcome Back!"}</h1>
-
-
 
           <p className="authSubtitle">
 
@@ -1880,15 +1515,9 @@ function Auth({ signup = false }) {
 
           </p>
 
-
-
           {error && <div className="authMessage error">{error}</div>}
 
-
-
           {success && <div className="authMessage success">{success}</div>}
-
-
 
           <form className="authForm" onSubmit={submit}>
 
@@ -1898,13 +1527,9 @@ function Auth({ signup = false }) {
 
                 <span>Full Name</span>
 
-
-
                 <div className="inputWrap">
 
                   <User size={18} />
-
-
 
                   <input
 
@@ -1924,19 +1549,13 @@ function Auth({ signup = false }) {
 
             )}
 
-
-
             <label>
 
               <span>Email address</span>
 
-
-
               <div className="inputWrap">
 
                 <Mail size={18} />
-
-
 
                 <input
 
@@ -1956,19 +1575,13 @@ function Auth({ signup = false }) {
 
             </label>
 
-
-
             <label>
 
               <span>Password</span>
 
-
-
               <div className="inputWrap">
 
                 <LockKeyhole size={18} />
-
-
 
                 <input
 
@@ -1983,8 +1596,6 @@ function Auth({ signup = false }) {
                   placeholder="Enter your password"
 
                 />
-
-
 
                 <button
 
@@ -2004,21 +1615,15 @@ function Auth({ signup = false }) {
 
             </label>
 
-
-
             {signup && (
 
               <label>
 
                 <span>Confirm Password</span>
 
-
-
                 <div className="inputWrap">
 
                   <LockKeyhole size={18} />
-
-
 
                   <input
 
@@ -2033,8 +1638,6 @@ function Auth({ signup = false }) {
                     placeholder="Confirm your password"
 
                   />
-
-
 
                   <button
 
@@ -2056,8 +1659,6 @@ function Auth({ signup = false }) {
 
             )}
 
-
-
             {!signup && (
 
               <div className="authOptions">
@@ -2066,13 +1667,9 @@ function Auth({ signup = false }) {
 
                   <input type="checkbox" />
 
-
-
                   <span>Remember me</span>
 
                 </label>
-
-
 
                 <button
 
@@ -2100,8 +1697,6 @@ function Auth({ signup = false }) {
 
             )}
 
-
-
             <button className="authSubmit" type="submit">
 
               {signup ? "Create Account" : "Login"}
@@ -2110,15 +1705,11 @@ function Auth({ signup = false }) {
 
           </form>
 
-
-
           <div className="authDivider">
 
             <span>or</span>
 
           </div>
-
-
 
           <button
 
@@ -2144,8 +1735,6 @@ function Auth({ signup = false }) {
 
           </button>
 
-
-
           <p className="authBottom">
 
             {signup ? "Already have an account?" : "Don't have an account?"}{" "}
@@ -2168,15 +1757,11 @@ function Auth({ signup = false }) {
 
 }
 
-
-
 /* =========================================================
 
    CAUSES PAGE
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Causes() {
 
@@ -2186,19 +1771,13 @@ function Causes() {
 
       <PublicNav />
 
-
-
       <div className="pageContainer">
 
         <div className="pageHeading">
 
           <span className="eyebrow">Make a Difference</span>
 
-
-
           <h1>Causes that need your support</h1>
-
-
 
           <p>
 
@@ -2207,8 +1786,6 @@ function Causes() {
           </p>
 
         </div>
-
-
 
         <div className="causePageGrid">
 
@@ -2228,49 +1805,33 @@ function Causes() {
 
 }
 
-
-
 /* =========================================================
 
    MY DONATIONS
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function MyDonations() {
 
   const [donations, setDonations] = useState(getD());
 
-
-
   const [search, setSearch] = useState("");
-
-
 
   useEffect(() => {
 
     const update = () => setDonations(getD());
 
-
-
     window.addEventListener("tripti-update", update);
-
-
 
     return () => window.removeEventListener("tripti-update", update);
 
   }, []);
-
-
 
   const filtered = donations.filter((d) =>
 
     `${d.cause} ${d.donor}`.toLowerCase().includes(search.toLowerCase()),
 
   );
-
-
 
   return (
 
@@ -2282,15 +1843,11 @@ function MyDonations() {
 
           <h1>My Donations</h1>
 
-
-
           <p>View and manage your donation history.</p>
 
         </div>
 
       </div>
-
-
 
       <div className="tableCard">
 
@@ -2299,8 +1856,6 @@ function MyDonations() {
           <div className="searchBox">
 
             <Search size={18} />
-
-
 
             <input
 
@@ -2314,8 +1869,6 @@ function MyDonations() {
 
           </div>
 
-
-
           <button className="filterBtn">
 
             <SlidersHorizontal size={17} />
@@ -2325,8 +1878,6 @@ function MyDonations() {
           </button>
 
         </div>
-
-
 
         <div className="donationTable">
 
@@ -2342,8 +1893,6 @@ function MyDonations() {
 
           </div>
 
-
-
           {filtered.map((d) => (
 
             <div className="tableRow" key={d.id}>
@@ -2352,13 +1901,9 @@ function MyDonations() {
 
                 <span>{iconFor(d.cause)}</span>
 
-
-
                 <div>
 
                   <b>{d.cause}</b>
-
-
 
                   <small>
 
@@ -2374,15 +1919,9 @@ function MyDonations() {
 
               </div>
 
-
-
               <strong>{money(d.amount)}</strong>
 
-
-
               <span>{d.date}</span>
-
-
 
               <span className="status">{d.status}</span>
 
@@ -2400,22 +1939,22 @@ function MyDonations() {
 
 }
 
-
-
 /* =========================================================
 
    ADD DONATION
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function AddDonation() {
 
   const currentUser = getUser();
+
   const location = useLocation();
+
   const selectedCause = causes.some((cause) => cause[0] === location.state?.cause)
+
     ? location.state.cause
+
     : causes[0][0];
 
   const [form, setForm] = useState({
@@ -2434,17 +1973,11 @@ function AddDonation() {
 
   });
 
-
-
   const [message, setMessage] = useState("");
-
-
 
   const update = (e) => {
 
     const { name, value, type, checked } = e.target;
-
-
 
     setForm({
 
@@ -2456,111 +1989,78 @@ function AddDonation() {
 
   };
 
-
-
-  const donate = (e) => {
-
+  const donate = async (e) => {
     e.preventDefault();
-
-
-
     setMessage("");
 
-
-
     if (!form.amount || Number(form.amount) <= 0) {
-
-      return setMessage("Please enter a valid donation amount.");
-
+      setMessage("Please enter a valid donation amount.");
+      return;
     }
 
-
-
-    if (!form.email) {
-
-      return setMessage(
-
-        "Please enter your email so we can prepare your appreciation message.",
-
-      );
-
+    if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setMessage("Please enter a valid email address to receive your thank-you email.");
+      return;
     }
 
-
-
+    // Save the donation first so an email failure never loses the donation record.
     const newDonation = {
-
       id: Date.now().toString(),
-
-
-
       donor: form.anonymous ? "Anonymous Donor" : form.name || "Guest Donor",
-
-
-
       amount: Number(form.amount),
-
-
-
       cause: form.cause,
-
-
-
       date: today(),
-
-
-
       anonymous: form.anonymous,
-
-
-
       status: "Completed",
-
-
-
       email: form.email,
-
-
-
       message: form.message,
-
     };
 
-
-
     const updated = [newDonation, ...getD()];
-
-
-
     saveD(updated);
 
-
-
-    setMessage(
-
-      form.anonymous
-
-        ? "Donation recorded successfully. Thank you for supporting Tripti Foundation!"
-
-        : `Donation successful! An appreciation email has been prepared for ${form.email}.`,
-
-    );
-
-
-
-    setForm({
-
-      ...form,
-
+    // Clear the amount/message after saving, but keep the donor's details.
+    setForm((previous) => ({
+      ...previous,
       amount: "",
-
       message: "",
+    }));
 
-    });
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+    if (!serviceId || !templateId || !publicKey) {
+      setMessage(
+        "Donation recorded successfully, but the thank-you email is not configured yet. Please check your EmailJS .env settings.",
+      );
+      return;
+    }
+
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          donor_name: form.anonymous ? "Donor" : form.name || "Donor",
+          donor_email: form.email,
+          donation_amount: Number(form.amount),
+          cause_name: form.cause,
+          donation_date: today(),
+        },
+        { publicKey },
+      );
+
+      setMessage(
+        `Donation recorded successfully! A thank-you email has been sent to ${form.email}.`,
+      );
+    } catch (error) {
+      console.error("EmailJS sending failed:", error);
+      setMessage(
+        `Your donation was recorded successfully, but we could not send the email to ${form.email}. Please check the EmailJS settings and try again later.`,
+      );
+    }
   };
-
-
 
   return (
 
@@ -2572,15 +2072,11 @@ function AddDonation() {
 
           <h1>Add Donation</h1>
 
-
-
           <p>Your support makes a real difference.</p>
 
         </div>
 
       </div>
-
-
 
       <div className="donationPage">
 
@@ -2588,13 +2084,9 @@ function AddDonation() {
 
           <h2>Make a Donation</h2>
 
-
-
           <label>
 
             <span>Select Cause</span>
-
-
 
             <select name="cause" value={form.cause} onChange={update}>
 
@@ -2612,15 +2104,11 @@ function AddDonation() {
 
           </label>
 
-
-
           <div className="twoFields">
 
             <label>
 
               <span>Amount (₹)</span>
-
-
 
               <input
 
@@ -2640,13 +2128,9 @@ function AddDonation() {
 
             </label>
 
-
-
             <label>
 
               <span>Email</span>
-
-
 
               <input
 
@@ -2666,15 +2150,11 @@ function AddDonation() {
 
           </div>
 
-
-
           {!form.anonymous && (
 
             <label>
 
               <span>Your Name</span>
-
-
 
               <input
 
@@ -2694,8 +2174,6 @@ function AddDonation() {
 
           )}
 
-
-
           <label className="anonymousBox">
 
             <input
@@ -2710,13 +2188,9 @@ function AddDonation() {
 
             />
 
-
-
             <div>
 
               <b>Donate anonymously</b>
-
-
 
               <small>
 
@@ -2728,13 +2202,9 @@ function AddDonation() {
 
           </label>
 
-
-
           <label>
 
             <span>Add a message (optional)</span>
-
-
 
             <textarea
 
@@ -2752,8 +2222,6 @@ function AddDonation() {
 
           </label>
 
-
-
           {message && (
 
             <div className="donationSuccess">
@@ -2766,8 +2234,6 @@ function AddDonation() {
 
           )}
 
-
-
           <button type="submit" className="donateButton">
 
             Donate Now
@@ -2778,17 +2244,11 @@ function AddDonation() {
 
         </form>
 
-
-
         <div className="donationInfo">
 
           <div className="plantImage">🌱</div>
 
-
-
           <h3>Every donation matters.</h3>
-
-
 
           <p>
 
@@ -2798,37 +2258,25 @@ function AddDonation() {
 
           </p>
 
-
-
           <div className="infoPoint">
 
             <ShieldCheck />
-
-
 
             <span>Transparent donation tracking</span>
 
           </div>
 
-
-
           <div className="infoPoint">
 
             <Mail />
-
-
 
             <span>Appreciation message after your donation</span>
 
           </div>
 
-
-
           <div className="infoPoint">
 
             <Heart />
-
-
 
             <span>Make a meaningful impact</span>
 
@@ -2844,25 +2292,17 @@ function AddDonation() {
 
 }
 
-
-
 /* =========================================================
 
    IMPACT PAGE
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Impact() {
 
   const donations = getD();
 
-
-
   const total = donations.reduce((a, d) => a + Number(d.amount), 0);
-
-
 
   return (
 
@@ -2874,15 +2314,11 @@ function Impact() {
 
           <h1>Your Impact</h1>
 
-
-
           <p>See how your contributions are making a difference.</p>
 
         </div>
 
       </div>
-
-
 
       <div className="impactStats">
 
@@ -2896,8 +2332,6 @@ function Impact() {
 
         </div>
 
-
-
         <div>
 
           <Users />
@@ -2908,8 +2342,6 @@ function Impact() {
 
         </div>
 
-
-
         <div>
 
           <TreePine />
@@ -2919,8 +2351,6 @@ function Impact() {
           <small>Trees Planted</small>
 
         </div>
-
-
 
         <div>
 
@@ -2934,15 +2364,11 @@ function Impact() {
 
       </div>
 
-
-
       <div className="impactContent">
 
         <div className="recentImpact">
 
           <h2>Recent Impact</h2>
-
-
 
           {donations.slice(0, 4).map((d) => (
 
@@ -2950,19 +2376,13 @@ function Impact() {
 
               <span>{iconFor(d.cause)}</span>
 
-
-
               <div>
 
                 <b>Supported {d.cause}</b>
 
-
-
                 <small>Contribution of {money(d.amount)}</small>
 
               </div>
-
-
 
               <small>{d.date}</small>
 
@@ -2972,13 +2392,9 @@ function Impact() {
 
         </div>
 
-
-
         <div className="impactQuote">
 
           <Heart />
-
-
 
           <p>"A little kindness goes a long way."</p>
 
@@ -2992,39 +2408,25 @@ function Impact() {
 
 }
 
-
-
 /* =========================================================
 
    PROFILE
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Profile() {
 
   const user = getUser();
 
-
-
   const [name, setName] = useState(user?.name || "");
-
-
 
   const [email, setEmail] = useState(user?.email || "");
 
-
-
   const [saved, setSaved] = useState(false);
-
-
 
   const saveProfile = (e) => {
 
     e.preventDefault();
-
-
 
     localStorage.setItem(
 
@@ -3040,11 +2442,7 @@ function Profile() {
 
     );
 
-
-
     setSaved(true);
-
-
 
     setTimeout(() => {
 
@@ -3053,8 +2451,6 @@ function Profile() {
     }, 2500);
 
   };
-
-
 
   return (
 
@@ -3066,15 +2462,11 @@ function Profile() {
 
           <h1>Profile</h1>
 
-
-
           <p>Manage your account details.</p>
 
         </div>
 
       </div>
-
-
 
       <div className="profileCard">
 
@@ -3084,15 +2476,11 @@ function Profile() {
 
         </div>
 
-
-
         <form className="profileForm" onSubmit={saveProfile}>
 
           <label>
 
             <span>Full Name</span>
-
-
 
             <input
 
@@ -3106,13 +2494,9 @@ function Profile() {
 
           </label>
 
-
-
           <label>
 
             <span>Email</span>
-
-
 
             <input
 
@@ -3128,8 +2512,6 @@ function Profile() {
 
           </label>
 
-
-
           <button className="saveProfile" type="submit">
 
             <Save size={17} />
@@ -3137,8 +2519,6 @@ function Profile() {
             Save Profile
 
           </button>
-
-
 
           {saved && (
 
@@ -3156,23 +2536,17 @@ function Profile() {
 
 }
 
-
-
 /* =========================================================
 
    APP
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Beneficiaries() {
 
   const [beneficiaries, setBeneficiaries] = React.useState([]);
 
   const [search, setSearch] = React.useState("");
-
-
 
   const [form, setForm] = React.useState({
 
@@ -3188,17 +2562,11 @@ function Beneficiaries() {
 
   });
 
-
-
   const addBeneficiary = (e) => {
 
     e.preventDefault();
 
-
-
     if (!form.name || !form.contact) return;
-
-
 
     setBeneficiaries([
 
@@ -3213,8 +2581,6 @@ function Beneficiaries() {
       },
 
     ]);
-
-
 
     setForm({
 
@@ -3232,8 +2598,6 @@ function Beneficiaries() {
 
   };
 
-
-
   const filteredBeneficiaries = beneficiaries.filter(
 
     (beneficiary) =>
@@ -3247,8 +2611,6 @@ function Beneficiaries() {
       beneficiary.contact.includes(search)
 
   );
-
-
 
   return (
 
@@ -3268,8 +2630,6 @@ function Beneficiaries() {
 
       </div>
 
-
-
       {/* ADD BENEFICIARY */}
 
       <div className="feed">
@@ -3285,8 +2645,6 @@ function Beneficiaries() {
           </div>
 
         </div>
-
-
 
         <form className="donationForm" onSubmit={addBeneficiary}>
 
@@ -3314,8 +2672,6 @@ function Beneficiaries() {
 
             />
 
-
-
             <input
 
               type="number"
@@ -3339,8 +2695,6 @@ function Beneficiaries() {
             />
 
           </div>
-
-
 
           <div className="twoFields">
 
@@ -3366,8 +2720,6 @@ function Beneficiaries() {
 
             />
 
-
-
             <input
 
               type="text"
@@ -3392,8 +2744,6 @@ function Beneficiaries() {
 
           </div>
 
-
-
           <input
 
             type="text"
@@ -3416,8 +2766,6 @@ function Beneficiaries() {
 
           />
 
-
-
           <button type="submit" className="btn primary">
 
             Add Beneficiary
@@ -3427,8 +2775,6 @@ function Beneficiaries() {
         </form>
 
       </div>
-
-
 
       {/* BENEFICIARY RECORDS */}
 
@@ -3443,8 +2789,6 @@ function Beneficiaries() {
             <p>View and search registered beneficiaries.</p>
 
           </div>
-
-
 
           <div className="searchBox">
 
@@ -3464,8 +2808,6 @@ function Beneficiaries() {
 
         </div>
 
-
-
         <div className="tableHeader">
 
           <span>Name</span>
@@ -3479,8 +2821,6 @@ function Beneficiaries() {
           <span>Action</span>
 
         </div>
-
-
 
         {beneficiaries.length === 0 ? (
 
@@ -3512,15 +2852,9 @@ function Beneficiaries() {
 
               </div>
 
-
-
               <span>{beneficiary.age || "—"}</span>
 
-
-
               <span>{beneficiary.contact}</span>
-
-
 
               <span>
 
@@ -3531,8 +2865,6 @@ function Beneficiaries() {
                 </span>
 
               </span>
-
-
 
               <button
 
@@ -3572,23 +2904,15 @@ function Beneficiaries() {
 
 }
 
-
-
-
-
 /* =========================================================
 
    ASSISTANCE
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function Assistance() {
 
   const [assistanceRecords, setAssistanceRecords] = React.useState([]);
-
-
 
   const [form, setForm] = React.useState({
 
@@ -3602,17 +2926,11 @@ function Assistance() {
 
   });
 
-
-
   const recordAssistance = (e) => {
 
     e.preventDefault();
 
-
-
     if (!form.beneficiary || !form.type || !form.date) return;
-
-
 
     setAssistanceRecords([
 
@@ -3628,8 +2946,6 @@ function Assistance() {
 
     ]);
 
-
-
     setForm({
 
       beneficiary: "",
@@ -3643,8 +2959,6 @@ function Assistance() {
     });
 
   };
-
-
 
   return (
 
@@ -3664,8 +2978,6 @@ function Assistance() {
 
       </div>
 
-
-
       {/* RECORD ASSISTANCE */}
 
       <div className="feed">
@@ -3681,8 +2993,6 @@ function Assistance() {
           </div>
 
         </div>
-
-
 
         <form className="donationForm" onSubmit={recordAssistance}>
 
@@ -3709,8 +3019,6 @@ function Assistance() {
               }
 
             />
-
-
 
             <select
 
@@ -3768,8 +3076,6 @@ function Assistance() {
 
           </div>
 
-
-
           <div className="twoFields">
 
             <input
@@ -3791,8 +3097,6 @@ function Assistance() {
               }
 
             />
-
-
 
             <input
 
@@ -3818,8 +3122,6 @@ function Assistance() {
 
           </div>
 
-
-
           <button type="submit" className="btn primary">
 
             Record Assistance
@@ -3829,8 +3131,6 @@ function Assistance() {
         </form>
 
       </div>
-
-
 
       {/* ASSISTANCE HISTORY */}
 
@@ -3852,8 +3152,6 @@ function Assistance() {
 
         </div>
 
-
-
         <div className="tableHeader">
 
           <span>Beneficiary</span>
@@ -3867,8 +3165,6 @@ function Assistance() {
           <span>Action</span>
 
         </div>
-
-
 
         {assistanceRecords.length === 0 ? (
 
@@ -3890,23 +3186,15 @@ function Assistance() {
 
               </div>
 
-
-
               <span>
 
                 <span className="status">{record.type}</span>
 
               </span>
 
-
-
               <span>{record.date}</span>
 
-
-
               <span>{record.description || "—"}</span>
-
-
 
               <button
 
@@ -3946,23 +3234,15 @@ function Assistance() {
 
 }
 
-
-
-
-
 /* =========================================================
 
    PENDING SUPPORT
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function PendingSupport() {
 
   const [pendingRecords, setPendingRecords] = React.useState([]);
-
-
 
   const [form, setForm] = React.useState({
 
@@ -3976,17 +3256,11 @@ function PendingSupport() {
 
   });
 
-
-
   const addPendingSupport = (e) => {
 
     e.preventDefault();
 
-
-
     if (!form.beneficiary || !form.requiredSupport) return;
-
-
 
     setPendingRecords([
 
@@ -4002,8 +3276,6 @@ function PendingSupport() {
 
     ]);
 
-
-
     setForm({
 
       beneficiary: "",
@@ -4017,8 +3289,6 @@ function PendingSupport() {
     });
 
   };
-
-
 
   return (
 
@@ -4037,8 +3307,6 @@ function PendingSupport() {
         </div>
 
       </div>
-
-
 
       {/* ADD PENDING SUPPORT */}
 
@@ -4059,8 +3327,6 @@ function PendingSupport() {
           </div>
 
         </div>
-
-
 
         <form className="donationForm" onSubmit={addPendingSupport}>
 
@@ -4088,8 +3354,6 @@ function PendingSupport() {
 
             />
 
-
-
             <input
 
               type="text"
@@ -4113,8 +3377,6 @@ function PendingSupport() {
             />
 
           </div>
-
-
 
           <div className="twoFields">
 
@@ -4146,8 +3408,6 @@ function PendingSupport() {
 
             </select>
 
-
-
             <input
 
               type="text"
@@ -4172,8 +3432,6 @@ function PendingSupport() {
 
           </div>
 
-
-
           <button type="submit" className="btn primary">
 
             Add Pending Support
@@ -4183,8 +3441,6 @@ function PendingSupport() {
         </form>
 
       </div>
-
-
 
       {/* PENDING RECORDS */}
 
@@ -4206,8 +3462,6 @@ function PendingSupport() {
 
         </div>
 
-
-
         <div className="tableHeader">
 
           <span>Beneficiary</span>
@@ -4221,8 +3475,6 @@ function PendingSupport() {
           <span>Action</span>
 
         </div>
-
-
 
         {pendingRecords.length === 0 ? (
 
@@ -4244,11 +3496,7 @@ function PendingSupport() {
 
               </div>
 
-
-
               <span>{record.requiredSupport}</span>
-
-
 
               <span>
 
@@ -4260,11 +3508,7 @@ function PendingSupport() {
 
               </span>
 
-
-
               <span>{record.description || "—"}</span>
-
-
 
               <button
 
@@ -4304,17 +3548,11 @@ function PendingSupport() {
 
 }
 
-
-
-
-
 /* =========================================================
 
    APP ROUTES
 
-\========================================================= */
-
-
+\\========================================================= */
 
 function App() {
 
@@ -4324,22 +3562,15 @@ function App() {
 
       <Route path="/" element={<Home />} />
 
-
-
       <Route path="/login" element={<Auth />} />
 
-
-
       <Route path="/signup" element={<Auth signup />} />
-
-
 
       <Route path="/dashboard" element={<Dashboard />} />
 
       <Route path="/causes" element={<Causes />} />
+
       <Route path="/add-donation" element={<AddDonation />} />
-
-
 
       <Route
 
@@ -4349,8 +3580,6 @@ function App() {
 
       />
 
-
-
       <Route
 
         path="/assistance"
@@ -4358,8 +3587,6 @@ function App() {
         element={<Assistance />}
 
       />
-
-
 
       <Route
 
@@ -4369,11 +3596,7 @@ function App() {
 
       />
 
-
-
       <Route path="/profile" element={<Profile />} />
-
-
 
             <Route path="/delivery-proof" element={<DeliveryProofGallery />} />
 
@@ -4391,9 +3614,7 @@ function App() {
 
    RENDER
 
-\========================================================= */
-
-
+\\========================================================= */
 
 createRoot(document.getElementById("root")).render(
 
